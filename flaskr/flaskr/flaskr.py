@@ -92,6 +92,27 @@ def add_entry():
     return redirect(url_for('show_entries'))
 
 
+@app.route('/start', methods=['GET'])
+def viz_tour():
+    db = get_db()
+    cur = db.execute('select title, text, author from entries order by id desc')    
+    entries = cur.fetchall()
+    return render_template('viz1.html', entries=entries)
+
+@app.route('/viz_1_next', methods=['GET'])
+def viz_tour2():
+    db = get_db()
+    cur = db.execute('select title, text, author from entries order by id desc')    
+    entries = cur.fetchall()
+    return render_template('viz2.html', entries=entries)
+
+@app.route('/viz_2_next', methods=['GET'])
+def viz_tour3():
+    db = get_db()
+    cur = db.execute('select title, text, author from entries order by id desc')    
+    entries = cur.fetchall()
+    return render_template('viz3.html', entries=entries)
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
