@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block body %}
+  {% if session.logged_in %}
+    <form action="{{ url_for('viz_tour') }}" method="get" class="viz_tour">
+    	<h2> Welcome!</h2>
+    	<h4> Hello! Thank you for participating in our project, 
+    		Teaching Information Visualization Yourself (TIVY). 
+    		You will learn about Matrix Visualization, a powerful visualization 
+    		format that represents relationships in a network. You will go through 
+    		a number of tutorials to familiarize yourself with:</h4>
+    		<ul>
+			<li>How to read the matrix visualization of a network.</li>
+			<li>How to find clusters in a network from its matrix visualization</li>
+			<li>How to calculate the density of a network from its matrix visualization.</li>
+			<li>How to calculate degree centrality of a node in the network from its matrix visualization.</li>
+			</ul>
+		<h4>Once you are finished with the tutorials, you will be asked a series of test questions to check how well you have understood the tutorials.</h4>
+    	<dd><input type="submit" value="Start Visualization Tour!">
+    </form>
+
+  {% endif %}
+
+{% endblock %}

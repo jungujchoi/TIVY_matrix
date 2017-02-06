@@ -1,0 +1,145 @@
+{% extends "layout.html" %}
+
+<meta charset="utf-8">
+<style>
+
+.viz_3 {
+  background: #888;
+}
+
+.square:nth-child(2n + 1) rect {
+  stroke: #000;
+  stroke-width: 2.5px;  
+}
+
+.square:nth-child(2n) rect {
+  stroke: #fff;
+  stroke-width: 2.5px;  
+}
+
+
+
+</style>
+{% block body %}
+
+<h4>This visualization is called "Square Circle Spiral Illusion" and is created by M. Bostock. The original visualization
+	along with documentation can be found <a href="https://bl.ocks.org/mbostock/1386444">here</a>.
+	Comment down below on this visualizaton.
+
+
+    <form action="{{ url_for('viz_tour2') }}" method="get" class="viz_2_prev">
+    	<br>
+    	<input type="submit" value="Previous">
+    	<br><br>
+    </form>
+<div class='viz_3'>
+	
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script>
+
+var w = 550,
+    h = 400,
+    start = Date.now();
+
+var rings = [
+  {radius: 65 * 1, width: 16, speed: -3e-2},
+  {radius: 65 * 2, width: 16, speed: -2e-2},
+  {radius: 65 * 3, width: 16, speed: -1e-2},
+  {radius: 65 * 4, width: 16, speed: 1e-2},
+  {radius: 65 * 5, width: 16, speed: 2e-2},
+  {radius: 65 * 6, width: 16, speed: 3e-2}
+];
+
+var svg = d3.select(".viz_3").append("svg")
+    .attr("width", w)
+    .attr("height", h)
+    
+var canvas = svg   
+  .append("g")
+    .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")scale(.6)");
+
+canvas.append('rect').attr('width', w).attr('height', h).attr('style', 'fill: #888')
+	.attr("transform", "translate(" + w*-1 + "," + h *-1 + ")scale(2)");
+
+var ring = canvas.selectAll("g")
+    .data(rings)
+  .enter().append("g")
+    .attr("class", "ring")
+    .attr('transform', 'translate(' + w/2 + ',' + h/2 + ')')
+    .each(ringEnter);
+
+d3.timer(function() {
+  var elapsed = Date.now() - start,
+      rotate = function(d) { return "rotate(" + d.speed * elapsed + ")"; };
+
+  ring
+      .attr("transform", rotate)
+    .selectAll("rect")
+      .attr("transform", rotate);
+});
+
+function ringEnter(d, i) {
+  var n = Math.floor(2 * Math.PI * d.radius / d.width * Math.SQRT1_2),
+      k = 360 / n;
+
+  var count = 0;
+  d3.select(this).selectAll("g")
+      .data(d3.range(n).map(function() { return d; }))
+    .enter().append("g")
+      .attr("class", "square")
+      .attr("transform", function(_, i) { return "rotate(" + i * k + ")translate(" + d.radius + ")"; })
+    .append("rect")
+      .attr("x", -d.width / 2)
+      .attr("y", -d.width / 2)
+      .attr("width", d.width)
+      .attr("style", function(i){
+      	var str;
+      	if (count % 2){
+      		str = "stroke: white;";
+      	} else {
+      		str = "stroke: black;"
+      	}
+      	count = count + 1;
+      	return "fill:none; stroke-width:2; " + str;
+      })
+      //.attr('transform', 'scale(0.1)')
+ 	  .attr("stroke-width", 2)
+      .attr("height", d.width);
+  /*var square = d3.select(this).selectAll("g")
+      .data(d3.range(n).map(function() { return d; }))
+    .enter().append("svg:g")
+      .attr("class", "square")
+      .attr("transform", function(_, i) { return "rotate(" + i * k + ")translate(" + d.radius + ")"; });
+  
+  square.append("svg:rect")
+      .attr("class", "squareElement")
+      .attr("x", -d.width / 2)
+      .attr("y", -d.width / 2)
+      .attr("fill", "none")
+      .attr("width", d.width)
+      .attr("height", d.width);*/     
+}
+
+</script>
+</div>
+
+
+
+ <ul class="entries">
+  {% for entry in entries %}
+    <li><h2>{{ entry.title }}</h2><h3> by {{ entry.author }} about {{ entry.page }}</h3>{{ entry.text|safe }}</li>
+  {% else %}
+    <li><em>There is no entry.</em></li>
+  {% endfor %}
+  </ul>  
+  
+     <form action="{{ url_for('add_entry') }}" method="post" class="add-entry">
+      <dl>
+      	<dt>Title:
+        <dd><input type="text" size="30" name="title">
+        <dt>Text:
+        <dd><textarea name="text" rows="5" cols="40"></textarea>
+        <dd><input type="submit" value="Share">
+      </dl>
+    </form> 
+{% endblock %}
