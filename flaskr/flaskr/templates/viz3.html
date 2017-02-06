@@ -17,8 +17,21 @@
   stroke-width: 2.5px;  
 }
 
+
+
 </style>
 {% block body %}
+
+<h4>This visualization is called "Square Circle Spiral Illusion" and is created by M. Bostock. The original visualization
+	along with documentation can be found <a href="https://bl.ocks.org/mbostock/1386444">here</a>.
+	Comment down below on this visualizaton.
+
+
+    <form action="{{ url_for('viz_tour2') }}" method="get" class="viz_2_prev">
+    	<br>
+    	<input type="submit" value="Previous">
+    	<br><br>
+    </form>
 <div class='viz_3'>
 	
 <script src="//d3js.org/d3.v3.min.js"></script>
@@ -110,13 +123,11 @@ function ringEnter(d, i) {
 </script>
 </div>
 
-    <form action="{{ url_for('viz_tour2') }}" method="get" class="viz_2_prev">
-    	<dd><input type="submit" value="Previous">
-    </form>
+
 
  <ul class="entries">
   {% for entry in entries %}
-    <li><h2>{{ entry.title }}</h2><h3> by {{ entry.author }}</h3>{{ entry.text|safe }}</li>
+    <li><h2>{{ entry.title }}</h2><h3> by {{ entry.author }} about {{ entry.page }}</h3>{{ entry.text|safe }}</li>
   {% else %}
     <li><em>There is no entry.</em></li>
   {% endfor %}

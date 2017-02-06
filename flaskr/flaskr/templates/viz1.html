@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 
+
 <meta charset="utf-8">
 <style>
 .viz_1 {
@@ -20,6 +21,17 @@ svg .values text{
 }
 </style>
 {% block body %}
+
+<h4>This visualization is called "Chord Viz" and is created by NPasha. The original visualization
+	along with documentation can be found <a href="http://bl.ocks.org/NPashaP/ba4c802d5ef68f70c019a9706f77ebf1">here</a>.
+	Comment down below on this visualizaton.
+	</h4>
+    <form action="{{ url_for('viz_tour') }}" method="get" class="viz_2_prev">
+    	<input type="submit" value="Previous">
+    </form>
+    <form action="{{ url_for('viz_tour2') }}" method="get" class="viz_2_next">
+    	<input type="submit" value="Next">
+    </form>
 <div class="viz_1">
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="http://vizjs.org/viz.v1.1.0.min.js"></script>
@@ -475,15 +487,12 @@ svg.append("g").attr("transform", "translate(300,275)scale(0.5)").call(ch);
 d3.select(self.frameElement).style("height", height+"px").style("width", width+"px");     
 </script>
 </div>
-    <form action="{{ url_for('viz_tour') }}" method="get" class="viz_2_prev">
-    	<dd><input type="submit" value="Previous">
-    </form>
-    <form action="{{ url_for('viz_tour2') }}" method="get" class="viz_2_next">
-    	<dd><input type="submit" value="Next">
-    </form>
+
+ 
 <ul class="entries">
   {% for entry in entries %}
-    <li><h2>{{ entry.title }}</h2><h3> by {{ entry.author }}</h3>{{ entry.text|safe }}</li>
+  	
+    <li><h2>{{ entry.title }}</h2><h3> by {{ entry.author }} about {{ entry.page }}</h3>{{ entry.text|safe }}</li>
   {% else %}
     <li><em>There is no entry.</em></li>
   {% endfor %}

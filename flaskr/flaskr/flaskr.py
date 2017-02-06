@@ -73,7 +73,7 @@ def close_db(error):
 @app.route('/')
 def show_entries():
     db = get_db()
-    cur = db.execute('select title, text, author from entries order by id desc')
+    cur = db.execute('select title, text, author, page from entries order by id desc')
     entries = cur.fetchall()
     return render_template('show_entries.html', entries=entries)
 
@@ -84,32 +84,44 @@ def add_entry():
         abort(401)
     db = get_db()
     author = session['username']
-    db.execute('insert into entries (title, text, author) values (?, ?, ?)',
-               [request.form['title'], request.form['text'], author])
+    page = session['current']
+    db.execute('insert into entries (title, text, author, page) values (?, ?, ?, ?)',
+               [request.form['title'], request.form['text'], author, page])
     db.commit()
     flash('New entry was successfully posted')
     #flash(request.form['title'] + ' ' + request.form['text'] + ' ' + author)
-    return redirect(url_for('show_entries'))
+    
+    #if session['current'] == None:
+    #    abort(401)
+    if session['current'] == 'viz1':
+        return redirect(url_for('viz_tour'))
+    elif session['current'] == 'viz2':
+        return redirect(url_for('viz_tour2'))
+    else:
+        return redirect(url_for('viz_tour3'))
 
 
-@app.route('/start', methods=['GET'])
+@app.route('/start', methods=['GET', 'POST'])
 def viz_tour():
+    session['current'] = 'viz1'
     db = get_db()
-    cur = db.execute('select title, text, author from entries order by id desc')    
+    cur = db.execute('select title, text, author, page from entries order by id desc')    
     entries = cur.fetchall()
     return render_template('viz1.html', entries=entries)
 
-@app.route('/viz_1_next', methods=['GET'])
+@app.route('/viz_1_next', methods=['GET', 'POST'])
 def viz_tour2():
+    session['current'] = 'viz2'
     db = get_db()
-    cur = db.execute('select title, text, author from entries order by id desc')    
+    cur = db.execute('select title, text, author, page from entries order by id desc')    
     entries = cur.fetchall()
     return render_template('viz2.html', entries=entries)
 
-@app.route('/viz_2_next', methods=['GET'])
+@app.route('/viz_2_next', methods=['GET', 'POST'])
 def viz_tour3():
+    session['current'] = 'viz3'
     db = get_db()
-    cur = db.execute('select title, text, author from entries order by id desc')    
+    cur = db.execute('select title, text, author, page from entries order by id desc')    
     entries = cur.fetchall()
     return render_template('viz3.html', entries=entries)
 

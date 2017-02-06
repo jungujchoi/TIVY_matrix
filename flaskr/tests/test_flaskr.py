@@ -77,7 +77,8 @@ def test_messages(client):
     rv = client.post('/add', data=dict(
         title='<Hello>',
         text='<strong>HTML</strong> allowed here',
-        author='<noone>'
+        author='<noone>',
+        page='<none>'
     ), follow_redirects=True)
     assert b'No entries here so far' not in rv.data
     assert b'&lt;Hello&gt;' in rv.data
