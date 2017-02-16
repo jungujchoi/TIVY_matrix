@@ -27,12 +27,19 @@
 	Comment down below on this visualizaton.
 
 
-    <form action="{{ url_for('viz_tour2') }}" method="get" class="viz_2_prev">
+    <form action="{{ url_for('viz_tour2') }}" method="post" class="viz_3_prev">
     	<br>
-    	<input type="submit" value="Previous">
-    	<br><br>
+    	<!--input type="submit" value="Previous"-->
+    	<br>
     </form>
-<div class='viz_3'>
+    <form action="{{ url_for('viz_tour4') }}" method="post" class="viz_3_next">
+    	<input type="submit" value="Next">
+    	<br>
+    	<input id = 'click3' name='click3' value='0'>
+		<input id = 'time3' name='time3' value='0'>
+    	<br>
+    </form>    
+<div class='viz_3' onmousedown="mouseDown()">
 	
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script>
@@ -119,7 +126,18 @@ function ringEnter(d, i) {
       .attr("width", d.width)
       .attr("height", d.width);*/     
 }
+var clickcount = 0;
+function mouseDown(){
+	clickcount++;
+	document.getElementById('click3').value = clickcount;
+}
+var time = 0;
 
+d3.timer(function(){
+	time+=1;
+	
+	document.getElementById('time3').value = time;
+})	
 </script>
 </div>
 

@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+
+<meta charset="utf-8">
+<style>
+
+.viz_3 {
+  background: #888;
+}
+
+.square:nth-child(2n + 1) rect {
+  stroke: #000;
+  stroke-width: 2.5px;  
+}
+
+.square:nth-child(2n) rect {
+  stroke: #fff;
+  stroke-width: 2.5px;  
+}
+
+
+
+</style>
+{% block body %}
+
+<h4>This is a short video about TIVY Parallel Coordinate visualization based on the work
+	"A Comparative Evaluation on Online Learning Approaches using Parallel Coordinate Visualization" by Kwon and Lee (2016). 
+	You can find the paper <a href="http://dl.acm.org/citation.cfm?id=2858101&CFID=727829259&CFTOKEN=88030635">here</a>.
+	Comment down below on this video.
+
+
+    <form action="{{ url_for('viz_tour3') }}" method="post" class="viz_4_prev">
+    	<br>
+    	<!--input type="submit" value="Previous"-->
+    	<br>
+    </form>
+    <form action="{{ url_for('viz_results') }}" method="post" class="viz_4_next">
+    	<input type="submit" value="Next">
+    	<br>
+    	<input id = 'click4' name='click4' value='0'>
+		<input id = 'time4' name='time4' value='0'>
+    	<br>
+    </form>    
+<div class='viz_4' onmousedown="mouseDown()">
+	
+<!--iframe width="440" height="260" src="https://www.youtube.com/embed/fyGCjXjbASw" frameborder="0" allowfullscreen>
+	
+</iframe-->
+<video width="400" height="300" controls>
+	<source src="{{ url_for('static', filename='vid.mp4')}}" type="video/mp4">
+  <!--source src="{{ url_for('static', filename='/static/vid.mp4')}}" type="video/mp4"-->
+  <!--source src="movie.ogg" type="video/ogg"-->
+Your browser does not support the video tag.
+</video>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script>
+	var clickcount = 0;
+function mouseDown(){
+	clickcount++;
+	document.getElementById('click4').value = clickcount;
+}
+var time = 0;
+
+d3.timer(function(){
+	time+=1;
+	
+	document.getElementById('time4').value = time;
+})	
+</script>
+
+</div>
+
+
+
+ <ul class="entries">
+  {% for entry in entries %}
+    <li><h2>{{ entry.title }}</h2><h3> by {{ entry.author }} about {{ entry.page }}</h3>{{ entry.text|safe }}</li>
+  {% else %}
+    <li><em>There is no entry.</em></li>
+  {% endfor %}
+  </ul>  
+  
+     <form action="{{ url_for('add_entry') }}" method="post" class="add-entry">
+      <dl>
+      	<dt>Title:
+        <dd><input type="text" size="30" name="title">
+        <dt>Text:
+        <dd><textarea name="text" rows="5" cols="40"></textarea>
+        <dd><input type="submit" value="Share">
+      </dl>
+    </form> 
+{% endblock %}
