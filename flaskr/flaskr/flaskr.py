@@ -15,7 +15,7 @@ from sqlite3 import dbapi2 as sqlite3
 from flask import flash, Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, send_from_directory
 from werkzeug.utils import secure_filename
-
+from time import gmtime, strftime
 
 
 #file.save('/templates/flare.csv')
@@ -120,7 +120,7 @@ def viz_tour():
     db = get_db()
     cur = db.execute('select title, text, author, page from entries order by id desc')    
     entries = cur.fetchall()
-    
+    session['data1']['start_time'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     #filename = '/templates/flare.csv'
     #file = request.files[filename]
     #send_csv(filename)
@@ -132,9 +132,12 @@ def viz_tour2():
         result = request.form
                
         session['current'] = 'viz2'
-        session['data1'] = {'click': 0, 'time': 0}
+        start_time1 = session['data1']['start_time']
+        #session['data1'] = {'click': 0, 'time': 0, 'start_time': start_time1, 'end_time': 0}
         session['data1']['click'] = request.form['click1'].strip()
         session['data1']['time'] = request.form['time1'].strip()
+        session['data1']['end_time'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        session['data2']['start_time'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
         db = get_db()
         cur = db.execute('select title, text, author, page from entries order by id desc')    
         entries = cur.fetchall()        
@@ -148,10 +151,14 @@ def viz_tour2():
 def viz_tour3():
     if request.method == 'POST':
         
-
-        session['data2'] = {'click': 0, 'time': 0}
+        
+        #session['data2'] = {'click': 0, 'time': 0}
         session['data2']['click'] = request.form['click2'].strip()
         session['data2']['time'] = request.form['time2'].strip()    
+
+        session['data2']['end_time'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        session['data3']['start_time'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+                
         session['current'] = 'viz3'
         db = get_db()
         cur = db.execute('select title, text, author, page from entries order by id desc')    
@@ -163,9 +170,12 @@ def viz_tour4():
     if request.method == 'POST':
     
         session['current'] = 'viz4'
-        session['data3'] = {'click': 0, 'time': 0}
+        #session['data3'] = {'click': 0, 'time': 0}
         session['data3']['click'] = request.form['click3'].strip()
         session['data3']['time'] = request.form['time3'].strip()    
+
+        session['data3']['end_time'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        session['data4']['start_time'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     
         db = get_db()
         cur = db.execute('select title, text, author, page from entries order by id desc')    
@@ -176,9 +186,12 @@ def viz_tour4():
 def viz_results():
     if request.method == 'POST':
         session['current'] = 'viz4'
-        session['data4'] = {'click': 0, 'time': 0}
+        #session['data4'] = {'click': 0, 'time': 0}
         session['data4']['click'] = request.form['click4'].strip()
         session['data4']['time'] = request.form['time4'].strip() 
+
+        session['data4']['end_time'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        
         
         db = get_db()
         cur = db.execute('select title, text, author, page from entries order by id desc')    
