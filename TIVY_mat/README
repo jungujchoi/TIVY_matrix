@@ -1,16 +1,9 @@
-                         / Flaskr /
-
-                 a minimal blog application
-
-
-    ~ What is Flaskr?
-
-      A sqlite powered thumble blog application
+                         / TIVY_mat /
 
     ~ How do I use it?
 
       1. edit the configuration in the flaskr.py file or
-         export an FLASKR_SETTINGS environment variable
+         export an TIVY_mat_SETTINGS environment variable
          pointing to a configuration file.
 
       2. install the app from the root of the project directory
@@ -19,13 +12,13 @@
 
       3. Instruct flask to use the right application
 
-         export FLASK_APP=flaskr
+         export FLASK_APP=TIVY_mat
 
       4. initialize the database with this command:
 
          flask initdb
 
-      5. now you can run flaskr:
+      5. now you can run TIVY_mat:
 
          flask run
 
