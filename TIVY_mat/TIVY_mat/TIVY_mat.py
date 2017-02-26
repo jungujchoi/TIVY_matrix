@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-    Flaskr
+    TIVY_mat
     ~~~~~~
-
+	Modified from flaskr
     A microblog example application written as Flask tutorial with
     Flask and sqlite3.
 
@@ -29,14 +29,14 @@ app = Flask(__name__,static_url_path='/static')
 
 # Load default config and override config from an environment variable
 app.config.update(dict(
-    DATABASE=os.path.join(app.root_path, 'flaskr.db'),
+    DATABASE=os.path.join(app.root_path, 'TIVY_mat.db'),
     DEBUG=True,
     SECRET_KEY='development key',
     USERNAME=['admin'],
     PASSWORD=['1234'],
     USERDATA={'mouseclick':[0, 0, 0, 0], 'time':[0, 0, 0, 0]},
 ))
-app.config.from_envvar('FLASKR_SETTINGS', silent=True)
+app.config.from_envvar('TIVY_mat_SETTINGS', silent=True)
 
 @app.route('/csv')
 def send_csv(path):
@@ -120,6 +120,7 @@ def viz_tour():
     db = get_db()
     cur = db.execute('select title, text, author, page from entries order by id desc')    
     entries = cur.fetchall()
+    session['data1'] = {'click': 0, 'time': 0, 'start_time': 0, 'end_time': 0}
     session['data1']['start_time'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     #filename = '/templates/flare.csv'
     #file = request.files[filename]
@@ -133,7 +134,7 @@ def viz_tour2():
                
         session['current'] = 'viz2'
         start_time1 = session['data1']['start_time']
-        #session['data1'] = {'click': 0, 'time': 0, 'start_time': start_time1, 'end_time': 0}
+        session['data2'] = {'click': 0, 'time': 0, 'start_time': 0, 'end_time': 0}
         session['data1']['click'] = request.form['click1'].strip()
         session['data1']['time'] = request.form['time1'].strip()
         session['data1']['end_time'] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
@@ -153,6 +154,7 @@ def viz_tour3():
         
         
         #session['data2'] = {'click': 0, 'time': 0}
+        session['data3'] = {'click': 0, 'time': 0, 'start_time': 0, 'end_time': 0}
         session['data2']['click'] = request.form['click2'].strip()
         session['data2']['time'] = request.form['time2'].strip()    
 
@@ -171,6 +173,7 @@ def viz_tour4():
     
         session['current'] = 'viz4'
         #session['data3'] = {'click': 0, 'time': 0}
+        session['data4'] = {'click': 0, 'time': 0, 'start_time': 0, 'end_time': 0}
         session['data3']['click'] = request.form['click3'].strip()
         session['data3']['time'] = request.form['time3'].strip()    
 

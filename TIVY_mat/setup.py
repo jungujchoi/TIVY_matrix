@@ -1,11 +1,11 @@
 from setuptools import setup
 
 setup(
-    name='flaskr',
-    packages=['flaskr'],
+    name='TIVY_mat',
+    packages=['TIVY_mat'],
     include_package_data=True,
     install_requires=[
-        'flask',
+        'TIVY_mat',
     ],
     setup_requires=[
         'pytest-runner',
