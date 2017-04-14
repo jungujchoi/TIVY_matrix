@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+<header>
+   <h1>Matrix Visualization Tutorials</h1>
+</header>
+  
+<!--article>
+  <h1>London</h1>
+  <p>London is the capital city of England. It is the most populous city in the  United Kingdom, with a metropolitan area of over 13 million inhabitants.</p>
+  <p>Standing on the River Thames, London has been a major settlement for two millennia, its history going back to its founding by the Romans, who named it Londinium.</p>
+</article-->
+
+<div id = "viewpanel" >
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<form action="{{ url_for('progress') }}" method = "post">
+		
+	
+	<div id = "viz1" class='vizContainer' onmousedown="mouseDown()" >
+		<h1 id = "problem">Step: ({{ session['current'] + 1}} out of 5)</h1>
+		
+		
+		
+			
+			
+			<br>
+			<br>
+			<input id = 'clickdata' name='clickdata' value='0' style="display:none">		
+			<br>
+			<script src="{{ url_for('static', filename='js/task1_ajax_q.js') }}"></script>		
+
+		<!--p id = "statement">Problem Statement</p-->
+		
+		<svg width="1200" height="600" id = "visualization1"></svg>
+		<script src="{{ url_for('static', filename='js/task1.js') }}"></script>
+		
+	</div>
+	<div id = "msglog" onmousedown="mouseDown()" >
+		<p id = 'logMsg'>Please click the row and column in the matrix visualization that corresponds to the highlighted node.</p>
+		<button id = "submit" type = "submit" >Next</button>
+	</div>
+	</form>
+
+  
+  
+</div>
+
+
+
+
+<footer> Teach Information Visualization Yourself (TIVY) 2017
+</footer>
+
+</div>
+<SCRIPT type="text/javascript">
+	//window.history.forward();
+	//function noBack() { window.history.forward(); }
+</SCRIPT>
+</body>
+</html>

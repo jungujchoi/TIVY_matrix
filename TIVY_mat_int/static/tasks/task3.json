@@ -1,0 +1,4 @@
+{
+	"Question" : "On this page we are going to explain how to find a 'common' node in the matrix visualization. When a node is connected to a number of nodes, the node becomes a common node. In the node-link diagram, 'New York' is the common node of 'Utah' and 'Texas.' In order to facilitate search of common nodes, you may reorder columns and rows of the matrix visualization. You can click the label and perform drag-and-drop to new positions. Now, try to bring 'Utah' and 'Texas' close to one another.",
+	"Options" : ["24", "32", "53", "11", "49", "72"]
+}

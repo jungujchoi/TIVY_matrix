@@ -1,3 +1,0 @@
-graft TIVY_mat/templates
-graft TIVY_mat/static
-include TIVY_mat/schema.sql

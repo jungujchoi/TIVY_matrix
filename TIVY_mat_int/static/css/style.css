@@ -1,0 +1,91 @@
+div.container {
+    width: 100%;
+    border: 1px solid gray;
+}
+
+header, footer {
+    padding: 1em;
+    color: white;
+    background-color: #1747B6;
+    clear: left;
+    text-align: center;
+}
+
+nav {
+    float: right;
+    max-width: 200px;
+    margin: 0;
+    padding: 1em;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+   
+nav ul a {
+    text-decoration: none;
+}
+
+article {
+    margin-left: 25px;
+    border-left: 0px solid gray;
+    padding: 1em;
+    overflow: hidden;
+}
+
+#viewpanel {
+    margin-left: 25px;
+    border-left: 0px solid gray;
+    padding: 1em;
+    overflow: hidden;
+}
+
+#problem {
+	font-size: 125%;
+	margin-left: 20px;
+}
+
+.vizContainer {
+	float: left;
+	width: 1200px;
+	padding: 0px;
+	border: 1px solid gray;
+}
+
+#msglog {
+	float: left;
+	width: 300px;
+	padding: 20px;
+	border: 1px solid gray;
+}
+
+#options {
+	float: left;
+	width: 200px;
+	padding: 10px;
+	border: 1px solid gray;
+	margin-left:20px;
+}
+
+#submit {
+	margin-left: 10px;
+}
+
+#statement {
+	margin-left: 20px;
+}
+
+#illicitdata {
+	float: left;
+}
+
+.links line {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}
+
+.nodes circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
