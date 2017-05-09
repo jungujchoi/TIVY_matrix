@@ -22,26 +22,26 @@
 				// Kevin = 4
 				// Sue = 5
 				
-				var labels = ['Nathan', 'Philip', 'John', 'Kevin', 'Sue'];
+				var labels = ['John', 'Nathan', 'Kevin', 'Philip', 'Sue'];
 				
 				// John and Kevin are friends
-				ans[0] = [3, 4];
+				ans[0] = [3, 2];
 				statements[0] = "John and Kevin are friends";
 				
 				// Sue and Kevin are friends
-				ans[1] = [5, 4];
+				ans[1] = [3, 1];
 				statements[1] = "Sue and Kevin are friends";
 				
 				// Nathan and Kevin are friends
-				ans[2] = [4, 1];
+				ans[2] = [1, 5];
 				statements[2] = "Nathan and Kevin are friends";
 				
 				// Sue and Philip are friends
-				ans[3] = [5, 2];
+				ans[3] = [2, 4];
 				statements[3] = "Sue and Philip are friends";
 
 				// Kevin and Philip are friends
-				ans[4] = [4, 2];
+				ans[4] = [2, 5];
 				statements[4] = "Kevin and Philip are friends";
 				
 				statements[5] = "Great job!"
@@ -151,24 +151,31 @@
 					.attr('cx', cx5).attr('cy',cy5)
 					.attr('style', 'fill: white; stroke-width: 2; stroke:black; opacity: 0.1');	
 
+				svg.append('line')
+					.attr('class', 'link')
+					.attr('x1', circles[ans[0][0]-1][0]).attr('y1', circles[ans[0][0]-1][1])
+					.attr('x2', circles[ans[0][1]-1][0]).attr('y2', circles[ans[0][1]-1][1])
+					.attr('style', 'stroke: blue; stroke-width: 2px;');
+					
+
 				t_1_x = 25;
 				t_1_y = 15;
 				t_2_x = 25;
 				t_2_y = 45;
 				t_3_x = 25;
 				t_3_y = 60;
-				var text_1 = d3.select('#visualization').append('text')
+				/*var text_1 = d3.select('#visualization').append('text')
 					.attr('class', 'noselect')
 					.attr('id', 'title')
 					.attr('x', t_1_x).attr('y', t_1_y)
 					.attr('style', 'font-weight: 900; fill:#8c7625;')
-					.text('First, do the node-link diagram that reflects Statement ' + counter);				
+					.text('First, do the node-link diagram that reflects Statement ' + counter);*/				
 				var text_2 = d3.select('#visualization').append('text')
 					.attr('class', 'noselect')
 					.attr('id', 'statement')
 					.attr('x', t_2_x).attr('y', t_2_y)
 					.attr('style', 'font-weight: 900; fill:#008B8B;')
-					.text('Statement ' + counter + ': ' + statements[0]);
+					.text('Select the matrix cells (squares) that represent the blue link.');
 				var text_3 = d3.select('#visualization').append('text')
 					.attr('class', 'noselect')
 					.attr('id', 'warning')
@@ -177,7 +184,7 @@
 					.text(' ');						
 				
 				var mousedrag = 0;
-				d3.selectAll('.node')
+				/*d3.selectAll('.node')
 					.on('mousedown', function(){
 						if (nodeLink == 1) {
 							var text = document.getElementById('warning').childNodes;
@@ -305,13 +312,13 @@
 							svg.on('mousemove', null);
 						});
 						}
-					})
+					});*/
 
 
 			var w_cell = 50;
 			var h_cell = 50;			
 					
-			d3.csv("static/data/data3.csv", function(error, data){
+			d3.csv("static/data/data4.csv", function(error, data){
 				celldata = data;
 				var j = 0;
 				ind = Object.keys(data[0]);
@@ -358,7 +365,7 @@
 				}
 				var ver = [];
 				d3.selectAll('.cell').on('mousedown', function(){
-					if (nodeLink == 0){
+					if (false){
 						var text = document.getElementById('warning').childNodes;
 						document.getElementById('warning').removeChild(text[0]);
 						d3.select('#warning').remove();									
@@ -375,14 +382,28 @@
 					var id = this.getAttribute('id');
 					
 					if (ans[counter-1].includes(columnY) && ans[counter-1].includes(rowX) && columnY != rowX && ver.includes(id) == false){
-						this.setAttribute('style', 'fill: black');
+						this.setAttribute('style', 'fill: black; stroke: blue; stroke-width: 6px');
+						this.setAttribute('class', 'selected');
 						ver.push(this.getAttribute('id'));
 						if (ver.length == 2){
+							
+						d3.selectAll('.selected').attr('style', 'fill: black;');
+						d3.selectAll('.selected').attr('class', 'cell');
+
+						if (counter != ans.length){
+						d3.selectAll('.link')
+							.attr('style', 'stroke: black; stroke-width: 1px;');
+						svg.append('line')
+							.attr('class', 'link')
+							.attr('x1', circles[ans[counter][0]-1][0]).attr('y1', circles[ans[counter][0]-1][1])
+							.attr('x2', circles[ans[counter][1]-1][0]).attr('y2', circles[ans[counter][1]-1][1])
+							.attr('style', 'stroke: blue; stroke-width: 2px;');
+						}
+
 							ver = [];
 							nodeLink = 0;
-							counter++;
-							
-								var text = document.getElementById('title').childNodes;
+							counter++;							
+								/*var text = document.getElementById('title').childNodes;
 								document.getElementById('title').removeChild(text[0]);
 								d3.select('#title').remove();
 								var newText = d3.select('#visualization').append('text')
@@ -390,9 +411,9 @@
 										.attr('id', 'title')
 										.attr('x', t_1_x).attr('y', t_1_y)
 										.attr('style', 'font-weight: 900; fill:#8c7625;')
-									.text('Now, do the node-link diagram that reflects Statement ' + counter);								
+									.text('Now, do the node-link diagram that reflects Statement ' + counter);*/								
 							
-							var text = document.getElementById('statement').childNodes;
+							/*var text = document.getElementById('statement').childNodes;
 							document.getElementById('statement').removeChild(text[0]);
 							d3.select('#statement').remove();
 							var newText = d3.select('#visualization').append('text')
@@ -400,7 +421,7 @@
 								.attr('id', 'statement')
 								.attr('x', t_2_x).attr('y', t_2_y)
 								.attr('style', 'font-weight: 900; fill:#008B8B;')
-								.text('Statement ' + counter + ': '+ statements[counter-1]);	
+								.text('Statement ' + counter + ': '+ statements[counter-1]);*/	
 
 							var text = document.getElementById('warning').childNodes;
 							document.getElementById('warning').removeChild(text[0]);
@@ -412,9 +433,23 @@
 								.attr('style', 'font-weight: 900; fill: red;')
 								.text(' ');		
 							
-							if (counter == 6) {
+							if (counter == ans.length+1) {
 								d3.selectAll('.cell').on('mousedown', null);
 								d3.selectAll('.node').on('mousedown', null);
+								
+								var text = document.getElementById('statement').childNodes;
+								document.getElementById('statement').removeChild(text[0]);
+								d3.select('#statement').remove();
+								var newText = d3.select('#visualization').append('text')
+									.attr('class', 'noselect')
+									.attr('id', 'statement')
+									.attr('x', t_2_x).attr('y', t_2_y)
+									.attr('style', 'font-weight: 900; fill:#008B8B;')
+									.text('Great job!');								
+
+								d3.selectAll('.link')
+									.attr('style', 'stroke: black; stroke-width: 1px;');
+								
 							}
 													
 						} else {

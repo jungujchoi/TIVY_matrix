@@ -20,29 +20,23 @@
 <div id = "viewpanel" >
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="https://d3js.org/d3.v4.min.js"></script>
-	<form action="{{ url_for('progress') }}" method = "post">
+	<form action="{{ url_for('progress10') }}" method = "post">
 		
 	
-	<div id = "viz1" class='vizContainer' onmousedown="mouseDown()" >
+	<div id = "viz1" class='vizContainer' >
 		<h1 id = "problem">Step: ({{ session['current'] + 1}} out of 5)</h1>
-		<!--svg width="1200" height="600" id = "visualization1"></svg-->
-			<p class = "Title1">Networks</p>
-			<ol >
-				<li class = "Title2">The dataset type of networks shows some type of relationship between two or more items (Munzner, 2014).
-					<ul>
-						<li class = "Title3">An item (vertex) is often called node.</li>
-						<li class = "Title3">A link (edge) is a relation between two items.</li>
-					</ul>
+		<!-svg width="1200" height="600" id = "visualization"></svg-->
+			<p class = "Title1">Draw this network</p>
+			<ul >
+				<li class = "Title2">Based on the matrix (right), complete the node-link diagram. 
+
 				</li>
-				<li class = "Title2">In Facebook, an example of networks with 3 nodes and 2 links:
-					<ul>
-						<li class = "Title3">John and Mary are friends.</li>
-						<li class = "Title3">Mary and Tom are friends.</li>
-						<li class = "Title3"><span style="font-weight:900">Three Nodes:</span> John, Mary, Tom.</li>
-						<li class = "Title3"><span style="font-weight:900">Two Links:</span> John – Mary, Mary – Tom</li>
-					</ul>
-					</li>
-			</ol>
+
+			</ul>
+			
+			<svg width='1200' height='350' id = 'visualization'></svg>
+			<script src = "{{ url_for('static', filename='js/task7.js') }}"></script>
+			
 			<!--p id = 'logMsg'>Please read the information below before proceed.</p-->
 			<button id = "submit" class = 'nav_backward' type = "submit" >Previous</button>	
 			<button id = "submit" class = 'nav_forward' type = "submit" >Next</button>		

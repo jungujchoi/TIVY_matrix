@@ -22,10 +22,10 @@
 				// Kevin = 4
 				// Sue = 5
 				
-				var labels = ['Nathan', 'Philip', 'John', 'Kevin', 'Sue'];
+				var labels = ['John', 'Nathan', 'Kevin', 'Philip', 'Sue'];
 				
 				// John and Kevin are friends
-				ans[0] = [3, 4];
+				ans[0] = [3, 2];
 				statements[0] = "John and Kevin are friends";
 				
 				// Sue and Kevin are friends
@@ -33,11 +33,11 @@
 				statements[1] = "Sue and Kevin are friends";
 				
 				// Nathan and Kevin are friends
-				ans[2] = [4, 1];
+				ans[2] = [1, 4];
 				statements[2] = "Nathan and Kevin are friends";
 				
 				// Sue and Philip are friends
-				ans[3] = [5, 2];
+				ans[3] = [2, 5];
 				statements[3] = "Sue and Philip are friends";
 
 				// Kevin and Philip are friends
@@ -151,30 +151,39 @@
 					.attr('cx', cx5).attr('cy',cy5)
 					.attr('style', 'fill: white; stroke-width: 2; stroke:black; opacity: 0.1');	
 
+				/*svg.append('line')
+					.attr('class', 'link')
+					.attr('x1', circles[ans[0][0]-1][0]).attr('y1', circles[ans[0][0]-1][1])
+					.attr('x2', circles[ans[0][1]-1][0]).attr('y2', circles[ans[0][1]-1][1])
+					.attr('style', 'stroke: blue; stroke-width: 2px;');*/
+					
+
 				t_1_x = 25;
 				t_1_y = 15;
 				t_2_x = 25;
 				t_2_y = 45;
 				t_3_x = 25;
 				t_3_y = 60;
-				var text_1 = d3.select('#visualization').append('text')
+				/*var text_1 = d3.select('#visualization').append('text')
 					.attr('class', 'noselect')
 					.attr('id', 'title')
 					.attr('x', t_1_x).attr('y', t_1_y)
 					.attr('style', 'font-weight: 900; fill:#8c7625;')
-					.text('First, do the node-link diagram that reflects Statement ' + counter);				
+					.text('First, do the node-link diagram that reflects Statement ' + counter);*/				
 				var text_2 = d3.select('#visualization').append('text')
 					.attr('class', 'noselect')
 					.attr('id', 'statement')
 					.attr('x', t_2_x).attr('y', t_2_y)
 					.attr('style', 'font-weight: 900; fill:#008B8B;')
-					.text('Statement ' + counter + ': ' + statements[0]);
+					.text('Draw a link in the node-link diagram that represents the blue-border squares.');
 				var text_3 = d3.select('#visualization').append('text')
 					.attr('class', 'noselect')
 					.attr('id', 'warning')
 					.attr('x', 25).attr('y', 60)
 					.attr('style', 'font-weight: 900; fill: red;')
 					.text(' ');						
+				
+
 				
 				var mousedrag = 0;
 				d3.selectAll('.node')
@@ -209,7 +218,7 @@
 							d3.select('#tempLine')
 								.attr('x1', c_x).attr('y1', c_y)
 								.attr('x2', x).attr('y2', y)
-								.attr('style', 'stroke: black; stroke-width: 2');
+								.attr('style', 'stroke: blue; stroke-width: 4');
 						});
 
 						
@@ -227,7 +236,18 @@
 								circle = circle + 1;
 								if (ans[counter-1].includes(circle) && ans[counter-1].includes(ind) && circle != ind){
 
-									var text = document.getElementById('title').childNodes;
+									d3.selectAll('.blueborder')
+										.attr('style', 'fill: black');
+
+									var ix = ans[counter][0] - 1;
+									var jy = ans[counter][1] - 1;
+									d3.select('#cell' + ix + '_' + jy)
+										.attr('class', 'blueborder')
+										.attr('style', 'fill: black; stroke: blue; stroke-width: 6px');
+									d3.select('#cell' + jy + '_' + ix)
+										.attr('class', 'blueborder')
+										.attr('style', 'fill: black; stroke: blue; stroke-width: 6px');		
+									/*var text = document.getElementById('title').childNodes;
 									document.getElementById('title').removeChild(text[0]);
 									d3.select('#title').remove();
 									var newText = d3.select('#visualization').append('text')
@@ -235,11 +255,11 @@
 										.attr('id', 'title')
 										.attr('x', t_1_x).attr('y', t_1_y)
 										.attr('style', 'font-weight: 900; fill:#8c7625;')
-										.text('Now, do the matrix that reflects Statement ' + counter);	
+										.text('Now, do the matrix that reflects Statement ' + counter);*/	
 									
-									nodeLink = 1;
+									//nodeLink = 1;
 									//matrix = 1;
-									//counter++;
+									counter++;
 									var text = document.getElementById('statement').childNodes;
 									document.getElementById('statement').removeChild(text[0]);
 									d3.select('#statement').remove();
@@ -305,13 +325,13 @@
 							svg.on('mousemove', null);
 						});
 						}
-					})
+					});
 
 
 			var w_cell = 50;
 			var h_cell = 50;			
 					
-			d3.csv("static/data/data3.csv", function(error, data){
+			d3.csv("static/data/data5.csv", function(error, data){
 				celldata = data;
 				var j = 0;
 				ind = Object.keys(data[0]);
@@ -322,7 +342,7 @@
 				for (var i = 0; i < data.length; i++){
 					for (var j = 0; j < data.length; j++){
 						canvas.append('rect').attr('class', 'cell')
-							.attr('id', 'cell(' + i + ',' + j +')')
+							.attr('id', 'cell' + i + '_' + j)
 							.attr('width', w_cell).attr('height', h_cell)
 							.attr('x', w_cell*(i+1))
 							.attr('y', h_cell*(j+1))
@@ -356,9 +376,9 @@
 					}
 
 				}
-				var ver = [];
+				/*var ver = [];
 				d3.selectAll('.cell').on('mousedown', function(){
-					if (nodeLink == 0){
+					if (false){
 						var text = document.getElementById('warning').childNodes;
 						document.getElementById('warning').removeChild(text[0]);
 						d3.select('#warning').remove();									
@@ -378,29 +398,22 @@
 						this.setAttribute('style', 'fill: black');
 						ver.push(this.getAttribute('id'));
 						if (ver.length == 2){
+
+
+						if (counter != ans.length + 1)
+						d3.selectAll('.link')
+							.attr('style', 'stroke: black; stroke-width: 1px;');
+						svg.append('line')
+							.attr('class', 'link')
+							.attr('x1', circles[ans[counter-1][0]-1][0]).attr('y1', circles[ans[counter-1][0]-1][1])
+							.attr('x2', circles[ans[counter-1][1]-1][0]).attr('y2', circles[ans[counter-1][1]-1][1])
+							.attr('style', 'stroke: blue; stroke-width: 2px;');
+
+
 							ver = [];
 							nodeLink = 0;
-							counter++;
-							
-								var text = document.getElementById('title').childNodes;
-								document.getElementById('title').removeChild(text[0]);
-								d3.select('#title').remove();
-								var newText = d3.select('#visualization').append('text')
-									.attr('class', 'noselect')
-										.attr('id', 'title')
-										.attr('x', t_1_x).attr('y', t_1_y)
-										.attr('style', 'font-weight: 900; fill:#8c7625;')
-									.text('Now, do the node-link diagram that reflects Statement ' + counter);								
-							
-							var text = document.getElementById('statement').childNodes;
-							document.getElementById('statement').removeChild(text[0]);
-							d3.select('#statement').remove();
-							var newText = d3.select('#visualization').append('text')
-								.attr('class', 'noselect')
-								.attr('id', 'statement')
-								.attr('x', t_2_x).attr('y', t_2_y)
-								.attr('style', 'font-weight: 900; fill:#008B8B;')
-								.text('Statement ' + counter + ': '+ statements[counter-1]);	
+							counter++;							
+
 
 							var text = document.getElementById('warning').childNodes;
 							document.getElementById('warning').removeChild(text[0]);
@@ -412,9 +425,23 @@
 								.attr('style', 'font-weight: 900; fill: red;')
 								.text(' ');		
 							
-							if (counter == 6) {
+							if (counter == ans.length+1) {
 								d3.selectAll('.cell').on('mousedown', null);
 								d3.selectAll('.node').on('mousedown', null);
+								
+								var text = document.getElementById('statement').childNodes;
+								document.getElementById('statement').removeChild(text[0]);
+								d3.select('#statement').remove();
+								var newText = d3.select('#visualization').append('text')
+									.attr('class', 'noselect')
+									.attr('id', 'statement')
+									.attr('x', t_2_x).attr('y', t_2_y)
+									.attr('style', 'font-weight: 900; fill:#008B8B;')
+									.text('Great job!');								
+
+								d3.selectAll('.link')
+									.attr('style', 'stroke: black; stroke-width: 1px;');
+								
 							}
 													
 						} else {
@@ -440,7 +467,15 @@
 							.text('Your selection does not reflect this relatonship.');								
 					}
 					}
-					});
+				});*/
+				var ix = ans[0][0] - 1;
+				var jy = ans[0][1] - 1;
+				d3.select('#cell' + ix + '_' + jy)
+					.attr('class', 'blueborder')
+					.attr('style', 'fill: black; stroke: blue; stroke-width: 6px');
+				d3.select('#cell' + jy + '_' + ix)
+					.attr('class', 'blueborder')
+					.attr('style', 'fill: black; stroke: blue; stroke-width: 6px');					
 				
 				for (var i = 0; i < data.length; i++){
 					for (var j = 0; j < data.length; j ++){

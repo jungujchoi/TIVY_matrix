@@ -8,7 +8,7 @@
 <div class="container">
 
 <header>
-   <h1>Matrix Visualization Tutorials</h1>
+   <h2>Matrix Visualization Tutorials</h2>
 </header>
   
 <!--article>
@@ -25,28 +25,56 @@
 	
 	<div id = "viz1" class='vizContainer' onmousedown="mouseDown()" >
 		<h1 id = "problem">Step: ({{ session['current'] + 1}} out of 5)</h1>
-		
-		
-		
-			
-			
-			<br>
-			<br>
-			<input id = 'clickdata' name='clickdata' value='0' style="display:none">		
-			<br>
-			<script src="{{ url_for('static', filename='js/task2_ajax_q.js') }}"></script>		
+		<!--svg width="1200" height="600" id = "visualization1"></svg-->
+			<p class = "Title1">Networks</p>
+			<ol >
+				<li class = "Title2">More complicated networks:
+					<ul>
+						<li class = "Title3">In Instagram, an example of directed networks with 3 nodes and 2 links.
+							<ol>
+								<li class = "Title4">John follows Mary (however, Mary doesn’t follow John).</li>
+								<li class = "Title4">Mary follows Tom (not vice versa)</li>
+								<li class = "Title4">John &rarr; Mary; Mary &rarr; Tom</li>
+							</ol>	
+						</li>
 
+					</ul>
+				</li>
+				<li class = "Title2">Weighted Link Network
+					<ul>
+						<li class = "Title3">In Twitter, an example of weighted (& directed) networks with 3 nodes and 2 links
+							<ol>
+								<li class = "Title4">John liked Mary’s tweets twice.</li>
+								<li class = "Title4">Mary liked Tom’s tweets three times.</li>
+								<li class = "Title4">John -2 &rarr; Mary; Mary -2 &rarr; Tom</li>
+							</ol>								
+						</li>
+					</ul>
+					</li>
+			</ol>
+			<!--p id = 'logMsg'>Please read the information below before proceed.</p-->
+			<button id = "submit" class = 'nav_backward' type = "submit" >Previous</button>	
+			<button id = "submit" class = 'nav_forward' type = "submit" >Next</button>		
+			<br>
+			
+			
+			<br>
+			<br>
+			<input id = 'clickdata' name='clickdata' value='0' style='display:none'>
+			<input id = 'totaltime' name='totaltime' value='0' style='display:none'>		
+			<br>
+			<!--script src="{{ url_for('static', filename='js/task1_ajax_q.js') }}"></script-->		
+			
 		<!--p id = "statement">Problem Statement</p-->
 		
-		<svg width="1200" height="600" id = "visualization1"></svg>
-		<script src="{{ url_for('static', filename='js/task2.js') }}"></script>
-
+		
+		<!--script src="{{ url_for('static', filename='js/task1.js') }}"></script-->
 		
 	</div>
-	<div id = "msglog" onmousedown="mouseDown()" >
-		<p id = 'logMsg'>Please click the elements in the matrix visualization that correspond to the highlighted connection.</p>
-		<button id = "submit" type = "submit" >Next</button>
-	</div>
+	<!--div id = "msglog" onmousedown="mouseDown()" >
+		
+		
+	</div-->
 	</form>
 
   

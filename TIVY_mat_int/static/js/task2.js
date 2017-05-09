@@ -1,5 +1,5 @@
-			var w_cell = 75;
-			var h_cell = 75;
+			var w_cell = 60;
+			var h_cell = 60;
 			var ind;
 			var celldata;
 			var mat = [];
@@ -12,16 +12,26 @@
 			var target = 0;
 			var sequence = 0;
 			var colors = ['red', 'magenta', 'blue', 'none'];		
-			//document.getElementById('submit').style.display = 'none';
+			var svg = d3.select('#visualization').append('g').attr('transform', 'translate(450,0)'); 
+
 			
-			//var svg = d3.select('#visualization').append('svg')
-			//		.attr('height', '600px')
-			//		.attr('width', '600px');
-			var svg = d3.select('#visualization1'); 
-			//var svg2 = d3.select('#visualization2').append('svg')
-			//		.attr('height', '600px')
-			//		.attr('width', '600px');
-			d3.csv("static/data/data2.csv", function(error, data){
+				function arrayToStr(log){
+					var str = '';
+					for (var i = 0; i < log.length; i++){
+						str = str + '[';
+						for (var j = 0; j < log[i].length; j++){
+							if (j == 0)
+							str = str + log[i][j];
+							else str= str + ': ' + log[i][j];
+						}
+						if (i != log.length - 1)
+						str = str + ']; ';
+						else str = str + ']';
+					}
+					return str;
+				}			
+			
+			d3.csv("static/data/data.csv", function(error, data){
 				celldata = data;
 				var j = 0;
 				ind = Object.keys(data[0]);
@@ -119,7 +129,33 @@
 								return 'stroke: none; stroke-width: none; opacity: 0.5; fill:' + str;
 							});						
 					}
-		
+					svg.append('line')
+						.attr('x1', 2.5*w_cell).attr('y1', 1.5*h_cell)
+						.attr('x2', -1*w_cell).attr('y2', 1*h_cell)
+						.attr('style', 'stroke: #afc62d; stroke-width: 3;')
+					svg.append('line')
+						.attr('x1', 1.5*w_cell).attr('y1', 2.5*h_cell)
+						.attr('x2', -1*w_cell).attr('y2', 1.2*h_cell)
+						.attr('style', 'stroke: #afc62d; stroke-width: 3;')		
+					svg.append('text')
+						.attr('x', -4.5*w_cell).attr('y', 1*h_cell+10)
+						.attr('style', 'fill: #758905; font-weight: 900;')
+						.text('John and Mary are friends.')	
+						
+						
+					svg.append('line')
+						.attr('x1', 3.5*w_cell).attr('y1', 2.5*h_cell)
+						.attr('x2', 5.5*w_cell).attr('y2', 3*h_cell)
+						.attr('style', 'stroke: #534dd6; stroke-width: 3;')
+					svg.append('line')
+						.attr('x1', 2.5*w_cell).attr('y1', 3.5*h_cell)
+						.attr('x2', 5.5*w_cell).attr('y2', 3.2*h_cell)
+						.attr('style', 'stroke: #534dd6; stroke-width: 3;')		
+					svg.append('text')
+						.attr('x', 6*w_cell).attr('y', 3*h_cell+10)
+						.attr('style', 'fill: #100b8c; font-weight: 900;')
+						.text('John and Mary are friends.')							
+						
 				}
 				
 				d3.selectAll('.cell').on('mousedown', function(){
@@ -193,6 +229,10 @@
 										
 										//document.getElementById('logMsg').innerHTML = 'Try to select column/row labels.';
 										userlog.push(['mousedown', str, timeCount/100]);
+										var clickdata = arrayToStr(userlog);
+						
+										document.getElementById('clickdata').value = clickdata;
+						
 										});
 				
 				for (var i = 0; i < data.length; i++){
@@ -213,70 +253,23 @@
 						
 						var id = parseInt(this.getAttribute('id').split('columnLabel')[1]);
 						userlog.push(['mouseClick',this.getAttribute('id'),timeCount/100]);
+						var clickdata = arrayToStr(userlog);
+						
+						document.getElementById('clickdata').value = clickdata;						
+						
 						document.getElementById('logMsg').innerHTML = "You have selected a column. Try to select matrix elements.";
-						/*if (id == highlighted[sequence]){
-							d3.select('#columnLabelText'+id)
-								.attr('style','fill: ' + colors[sequence] + '; font-weight:900;');
-							if (target == 0){
-								target = 0.3;
-								document.getElementById('logMsg').innerHTML = "Now select the corresponding row.";
-							} else if (target == 0.5){
-								target = 1;
-							}
-							if (target == 1) {
-								//document.getElementById('logMsg').innerHTML = "Now select the row and column that correspond to the " + colors[sequence] + " node.";
-								sequence++;
-								document.getElementById('logMsg').innerHTML = "Now select the row and column that correspond to the " + colors[sequence] + " node.";
-								target = 0;
-								d3.select('#nodeLabel_'+highlighted[sequence])
-									.attr('style','stroke: ' + colors[sequence] + '; fill: white; stroke-width:2;');									
-								d3.select('#nodeLabel'+highlighted[sequence])
-									.attr('style','fill: ' + colors[sequence] + '; font-weight:900;');
-																			
-								//alert('well done');
-							}
-							if (sequence == 3){
-								d3.selectAll('.columnLabel').on('mousedown', null);
-								document.getElementById('logMsg').innerHTML = "Great job! Let's move on to the next tutorial. Click next please.";
-								document.getElementById('submit').disabled = false;
-							}										
-						} else {
-							document.getElementById('logMsg').innerHTML = "You have selected the wrong column. Try again.";
-						}*/
+
 					});
 				d3.selectAll('.columnLabelText')
 					.on('mousedown', function(){
 							
 						var id = parseInt(this.getAttribute('id').split('columnLabelText')[1]);
 						userlog.push(['mouseClick',this.getAttribute('id'),timeCount/100]);
+						var clickdata = arrayToStr(userlog);
+						
+						document.getElementById('clickdata').value = clickdata;						
 						document.getElementById('logMsg').innerHTML = "You have selected a column. Try to select matrix elements.";
-						/*if (id == highlighted[sequence]){
-							d3.select('#columnLabelText'+id)
-								.attr('style','fill: ' + colors[sequence] + '; font-weight:900;');
-							if (target == 0){
-								target = 0.3;
-								document.getElementById('logMsg').innerHTML = "Now select the corresponding row.";
-							} else if (target == 0.5){
-								target = 1;
-							}
-							if (target == 1) {
-								sequence++;
-								document.getElementById('logMsg').innerHTML = "Now select the row and column that correspond to the " + colors[sequence] + " node.";	
-								target = 0;
-								d3.select('#nodeLabel_'+highlighted[sequence])
-									.attr('style','stroke: ' + colors[sequence] + '; fill: white; stroke-width:2;');									
-								d3.select('#nodeLabel'+highlighted[sequence])
-									.attr('style','fill: ' + colors[sequence] + '; font-weight:900;');																		
-								//alert('well done');
-							}
-							if (sequence == 3){
-								d3.selectAll('.columnLabelText').on('mousedown', null);
-								document.getElementById('logMsg').innerHTML = "Great job! Let's move on to the next tutorial. Click next please.";
-								document.getElementById('submit').disabled = false;
-							}								
-						} else {
-							document.getElementById('logMsg').innerHTML = "You have selected the wrong column. Try again.";
-						}*/
+
 											
 					});
 				d3.selectAll('.rowLabel')
@@ -284,35 +277,11 @@
 							
 						var id = parseInt(this.getAttribute('id').split('rowLabel')[1]);
 						userlog.push(['mouseClick',this.getAttribute('id'),timeCount/100]);
+						var clickdata = arrayToStr(userlog);
+						
+						document.getElementById('clickdata').value = clickdata;						
 						document.getElementById('logMsg').innerHTML = "You have selected a row. Try to select matrix elements.";
-						/*if (id == highlighted[sequence]){
-							d3.select('#rowLabelText'+id)
-								.attr('style','fill: ' + colors[sequence] + '; font-weight:900;');
-							if (target == 0){
-								target = 0.5;
-								document.getElementById('logMsg').innerHTML = "Now select the corresponding column.";
-							} else if (target == 0.3){
-								target = 1;
-								
-							}
-							if (target == 1) {
-								sequence++;
-								document.getElementById('logMsg').innerHTML = "Now select the row and column that correspond to the " + colors[sequence] + " node.";	
-								target = 0;
-								d3.select('#nodeLabel_'+highlighted[sequence])
-									.attr('style','stroke: ' + colors[sequence] + '; fill: white; stroke-width:2;');									
-								d3.select('#nodeLabel'+highlighted[sequence])
-									.attr('style','fill: ' + colors[sequence] + '; font-weight:900;');																
-								//alert('well done');
-							}
-							if (sequence == 3){
-								d3.selectAll('.rowLabel').on('mousedown', null);
-								document.getElementById('logMsg').innerHTML = "Great job! Let's move on to the next tutorial. Click next please.";
-								document.getElementById('submit').disabled = false;
-							}								
-						} else {
-							document.getElementById('logMsg').innerHTML = "You have selected the wrong row. Try again.";
-						}*/
+
 											
 					});
 				d3.selectAll('.rowLabelText')
@@ -320,242 +289,13 @@
 							
 						var id = parseInt(this.getAttribute('id').split('rowLabelText')[1]);
 						userlog.push(['mouseClick',this.getAttribute('id'),timeCount/100]);
+						var clickdata = arrayToStr(userlog);
+						
+						document.getElementById('clickdata').value = clickdata;						
 						document.getElementById('logMsg').innerHTML = "You have selected a row. Try to select matrix elements.";
-						/*if (id == highlighted[sequence]){
-							d3.select('#rowLabelText'+id)
-								.attr('style','fill: ' + colors[sequence] + '; font-weight:900;');
-							if (target == 0){
-								target = 0.5;
-								document.getElementById('logMsg').innerHTML = "Now select the corresponding column.";
-							} else if (target == 0.3){
-								target = 1;
-							}
-							if (target == 1) {
-								target = 0;
-								sequence++;
-								document.getElementById('logMsg').innerHTML = "Now select the row and column that correspond to the " + colors[sequence] + " node.";
-								d3.select('#nodeLabel_'+highlighted[sequence])
-									.attr('style','stroke: ' + colors[sequence] + '; fill: white; stroke-width:2;');	
-								d3.select('#nodeLabel'+highlighted[sequence])
-									.attr('style','fill: ' + colors[sequence] + '; font-weight:900;');						
-								//alert('well done');
-							}
-							if (sequence == 3){
-								d3.selectAll('.rowLabelText').on('mousedown', null);
-								document.getElementById('logMsg').innerHTML = "Great job! Let's move on to the next tutorial. Click next please.";
-								document.getElementById('submit').disabled = false;
-							}	
-						} else {
-							document.getElementById('logMsg').innerHTML = "You have selected the wrong row. Try again.";
-						}*/											
+					
 					});
-								
-				
-				/*d3.selectAll('.columnLabel')
-					.on('mousedown', function(){
-						if (mouseEvt == 1){
-						var logtime = timeCount/100;
-						var logStr = 'Column ' + this.parentNode.getAttribute('id');	
-						var parent = this.parentNode;
-						var temp = parent.cloneNode(true);
-						d3.select(temp).selectAll('.cell')
-							.attr('style', function() {
-								var style = this.getAttribute('style').split(';');
-								var str = 'stroke: red; stroke-width: 5px;';
-								for (var s = 2; s < style.length; s++){
-									if (s == style.length - 1){
-										if (style[s] == ' fill:black')
-										str = str + ' fill:red';
-										else str = str + ' fill:white'; 
-									} else {
-										str = str + style[s]+ ';'; 
-									}
-								}
-								return str;								
-							});
-						//d3.select(temp).selectAll('.columnLabel')
-						//	.attr('style', 'fill: white; opacity: 0.5');
-							
-						d3.select(temp).selectAll('text')
-							.attr('fill', 'red');
-							
-						document.getElementsByClassName('canvas')[0].appendChild(temp);
-						mousedrag = 1;
-						dx = event.clientX - parent.getAttribute('transform').split('(')[1].split(',')[0];	
-						
-						d3.select('.canvas')
-							.on('mousemove', function(){
-								var x = event.clientX-dx;
-								var y = parent.getAttribute('transform').split(')')[0].split(',')[1];
-								if (x < w_cell){
-									x = w_cell;
-								} else if (x > w_cell * data.length){
-									x = w_cell * data.length;
-								}								
-								if (mousedrag == 1)
-								temp.setAttribute('transform', 'translate(' + x + ',' + y + ')');
-							})
-							.on('mouseup', function(){
-								//var x = event.clientX;
-								var x = parseFloat(temp.getAttribute('transform').split(',')[0].split('(')[1]);
-								var id = temp.getAttribute('id');
-								
-								temp.remove();
-								mousedrag = 0;
-								var newColumn = swapColumn(id, x);
-								logStr = logStr + ' to gc' + newColumn;
-								userlog.push([logStr, logtime]);
-								d3.select('.canvas').on('mousemove', null);
-								d3.select('.canvas').on('mouseup', null);
-							});
-						}	
-						//var c = 0;
-					});*/
-					
-					
-				/*d3.selectAll('.rowLabel')
-					.on('mousedown', function(){
-						if (mouseEvt == 1){
-						var logtime = timeCount/100;
-						var logStr = 'Row ' + this.parentNode.getAttribute('id');	
-						var parent = this.parentNode;
-						mousedrag = 1;
-						
-						var temp = parent.cloneNode(true);
-						d3.select(temp).selectAll('.cell')
-							.attr('style', function() {
-								var style = this.getAttribute('style').split(';');
-								var str = 'stroke: red; stroke-width: 5px;';
-								for (var s = 2; s < style.length; s++){
-									if (s == style.length - 1){
-										if (style[s] == ' fill:black')
-										str = str + ' fill:red';
-										else str = str + ' fill:white'; 
-									} else {
-										str = str + style[s]+ ';'; 
-									}
-								}
-								return str;								
-							});						
-
-						d3.select(temp).selectAll('.rowLabel')
-							//.attr('style', 'fill: white; opacity: 0.5');
-							
-						d3.select(temp).selectAll('text')
-							.attr('fill', 'red');
-						document.getElementsByClassName('canvas')[0].appendChild(temp);
-						mousedrag = 1;						
-						dy = event.clientY - parent.getAttribute('transform').split(')')[0].split(',')[1];	
-						
-						d3.select('.canvas')
-							//.attr('style', 'fill: white; stroke: red; stroke-width: 5px; opacity: 0.5')
-							.on('mousemove', function(){
-								var y = event.clientY-dy;
-								//var y = this.getAttribute('transform').split(')')[0].split(',')[1];
-								if (y < h_cell){
-									y = h_cell;
-								} else if (y > h_cell * data.length){
-									y = h_cell * data.length;
-								}								
-								if (mousedrag == 1)
-								temp.setAttribute('transform', 'translate(' + 0 + ',' + y + ')');
-							})
-							.on('mouseup', function(){
-								
-								
-								mousedrag = 0;
-								var id = temp.getAttribute('id');
-								var y = parseFloat(temp.getAttribute('transform').split(',')[1].split(')')[0]);
-
-								temp.remove();
-								var newRow = swapRow(id, y);
-								logStr = logStr + ' to gr' + newRow;
-								userlog.push([logStr, logtime]);								
-								d3.select('.canvas').on('mouseup', null);
-								d3.select('.canvas').on('mousemove', null);
-							});
-						}
-
-					});*/					
-					
-		
-				
-				// draw node-link diagram
-				r = 200;
-				mid_x = 750;
-				mid_y = 300;
-				phi = Math.PI*2/ind.length;
-				p_x = [];
-				p_y = [];
-				for (var i = 0; i < ind.length; i++){
-					p_x[i] = mid_x + r*Math.cos(phi*i);
-					p_y[i] = mid_y + r*Math.sin(phi*i);
-					svg.append('circle')
-						.attr('r', 2)
-						.attr('style', 'fill: black')
-						.attr('cx', p_x[i])
-						.attr('cy', p_y[i]);
-				}
-				for (var i = 0; i < ind.length; i++){
-					for (var j = i+1; j < ind.length; j++){
-						if (mat[i][j] == "1"){
-							svg.append('line')
-								.attr('id', 'line' + i+'_'+j)
-								.attr('class','links')
-								.attr('x1', p_x[i]).attr('y1', p_y[i])
-								.attr('x2', p_x[j]).attr('y2', p_y[j])
-								.attr('style', function(){
-									var ind1 = relations[sequence][0];
-									var ind2 = relations[sequence][1];
-									if ((i == ind1 && j == ind2) || (i == ind2 && j == ind1)){
-										return 'stroke: ' + colors[sequence] + '; stroke-width: 4px;';
-									} else {
-										return 'stroke: black; stroke-width: 4px;';
-									}
-									
-								});
-						}
-					}
-				}			
-				var rx = 50;
-				var ry = 25;							
-				for (var i = 0; i < ind.length; i++){
-					p_x[i] = mid_x + r*Math.cos(phi*i);
-					p_y[i] = mid_y + r*Math.sin(phi*i);
-					svg.append('ellipse').attr('class', 'nodeLabel')
-						.attr('id', 'nodeLabel_'+i)
-						.attr('rx', 50)
-						.attr('ry', 25)
-						.attr('style', function(){
-							var str;
-							if (i == 1){
-								return 'stroke: black; stroke-width: 2;fill: white';
-							}
-							else {
-								return 'stroke: black; stroke-width: 2;fill: white';
-							}
-						})
-						.attr('cx', p_x[i])
-						.attr('cy', p_y[i]);
-				}
-				for (var i = 0; i < ind.length; i++){
-					p_x[i] = mid_x + r*Math.cos(phi*i);
-					p_y[i] = mid_y + r*Math.sin(phi*i);
-					svg.append('text').attr('class', 'nodeLabel')
-						.attr('id', 'nodeLabel' + i)
-						//.attr('r', 2)
-						.attr('style', function(){
-							if (i == 1){
-								return 'fill: black';
-							} else {
-								return 'fill: black';
-							}
-							
-						})
-						.attr('x', p_x[i]-rx/2)
-						.attr('y', p_y[i])
-						.text(ind[i]);
-				}																
+																		
 			});
 			function swapRow(id, y){
 				var row = parseInt(id.split('gr')[1]);
@@ -838,5 +578,5 @@
 		var timer = setInterval(frame, 10);
 		function frame(){
 			timeCount++;
-			//document.getElementById('myText').value = timeCount/100;
+			document.getElementById('totaltime').value = timeCount/100;
 		}

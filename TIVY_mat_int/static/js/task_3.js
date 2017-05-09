@@ -1,5 +1,5 @@
-			var w_cell = 45;
-			var h_cell = 45;
+			var w_cell = 75;
+			var h_cell = 75;
 			var ind;
 			var celldata;
 			var mat = [];
@@ -11,55 +11,18 @@
 			var relations = [[0,2],[0,4],[2,3]];
 			var target = 0;
 			var sequence = 0;
-			var colors = ['red', 'magenta', 'blue', 'none'];	
+			var colors = ['red', 'magenta', 'blue', 'none'];
+			var common = 0;
+			var task = 0;		
+			//document.getElementById('submit').style.display = 'none';
 			
-			var statements = [];
-			var ans = [];
-			// John = 1;
-			// Nathan = 2;
-			// Kevin = 3;
-			// Philip = 4;
-			// Sue = 5;
-			//John and Kevin are friends;
-			statements[0] = 'John and Kevin are friends';
-			ans[0] = [1,3];
-			
-			//Kevin and Sue are friends;
-			statements[1] = 'Kevin and Sue are friends';
-			ans[1] = [3,5];			
-			 
-			//Sue and Nathan are not friends; 
-			//Nathan and Kevin are friends; 
-			statements[2] = 'Nathan and Kevin are friends';
-			ans[2] = [2,3];			
-			
-			//Sue and Philip are friends; 
-			statements[3] = 'Sue and Philip are friends';
-			ans[3] = [5,4];			
-			
-			//Kevin and Philip are friends
-			statements[4] = 'Kevin and Philip are friends';
-			ans[4] = [3,4];			
-			
-			statements[5] = 'Great job!'
-			
-			var counter = 1;
-			var canvas = d3.select('#visualization');	
-			var svg = d3.select('#visualization').append('g').attr('transform', 'translate(450,50)'); 
-
-				var text_1 = canvas.append('text')
-					.attr('class', 'noselect')
-					.attr('id', 'statement')
-					.attr('x', 25).attr('y', 25)
-					.attr('style', 'font-weight: 900; fill:#008B8B;')
-					.text('Statement ' + counter + ': ' + statements[counter-1]);
-				var text_1 = canvas.append('text')
-					.attr('class', 'noselect')
-					.attr('id', 'warning')
-					.attr('x', 25).attr('y', 40)
-					.attr('style', 'font-weight: 900; fill: red;')
-					.text(' ');	
-
+			//var svg = d3.select('#visualization').append('svg')
+			//		.attr('height', '600px')
+			//		.attr('width', '600px');
+			var svg = d3.select('#visualization1'); 
+			//var svg2 = d3.select('#visualization2').append('svg')
+			//		.attr('height', '600px')
+			//		.attr('width', '600px');
 			
 				function arrayToStr(log){
 					var str = '';
@@ -77,7 +40,7 @@
 					return str;
 				}			
 			
-			d3.csv("static/data/data2.csv", function(error, data){
+			d3.csv("static/data/data3.csv", function(error, data){
 				celldata = data;
 				var j = 0;
 				ind = Object.keys(data[0]);
@@ -86,45 +49,9 @@
 				
 				var canvas = svg.append('g').attr('class', 'canvas');
 				for (var i = 0; i < data.length; i++){
-					for (var j = 0; j < data.length; j++){
-						svg.append('rect').attr('class', 'cell')
-							.attr('id', 'cell(' + i + ',' + j +')')
-							.attr('width', w_cell).attr('height', h_cell)
-							.attr('x', w_cell*(i+1))
-							.attr('y', h_cell*(j+1))
-							.attr('style', function(){
-								var str;
-								if (data[i][ind[j]] == '1'){
-									str = 'black';
-								}
-								else {
-									str = 'white';
-								} 
-									
-								return 'stroke: black; stroke-width: 2; opacity: 1; fill:' + str;
-							});
-						svg.append('text').attr('class', 'noselect')
-							//.attr('id', 'columnLabelText' + i)
-						//.attr('x', w_cell*(i+1)+w_cell*1/10).attr('y', h_cell*(9)/10)
-							.attr('transform', function(){
-							var x = 1*w_cell*(i+1)+w_cell*1/10;
-							var y = h_cell*9/10;
-							return 'translate(' + x + ',' + y + ')rotate(-45)';
-						}).text(function(){return data.columns[i];});		
-
-						svg.append('text').attr('class', 'noselect')
-							//.attr('id', 'rowLabelText' + i)
-						//.attr('x', w_cell*(i+1)+w_cell*1/10).attr('y', h_cell*(9)/10)
-							.attr('transform', function(){
-								var x = w_cell*0/10;
-								var y = 1*h_cell*(i+1) + 1/2*h_cell;
-								return 'translate(' + x + ',' + y + ')';
-							})
-							.text(function(){return data.columns[i];});								
-											
-					}
+					
 					// Create column g
-					/*var column = canvas.append('g').attr('id', 'gc' + i)
+					var column = canvas.append('g').attr('id', 'gc' + i)
 						.attr('class', 'column_g')
 						.attr('transform', function(){
 							var x = w_cell*(i+1);
@@ -137,13 +64,17 @@
 						//.attr('x', w_cell*(i+1))
 						.attr('y', h_cell*(0))
 						.attr('style', 'stroke:white; fill:white; opacity: 0.5');
-					column.append('text').attr('class', 'columnLabelText')
+					column.append('text').attr('class', 'columnLabel')
 						.attr('id', 'columnLabelText' + i)
 						//.attr('x', w_cell*(i+1)+w_cell*1/10).attr('y', h_cell*(9)/10)
 						.attr('transform', function(){
 							var x = 0*w_cell*(i+1)+w_cell*1/10;
 							var y = h_cell*9/10;
 							return 'translate(' + x + ',' + y + ')rotate(-45)';
+						}).attr('style', function(){
+							if (i==1 || i==4){
+								return 'fill: red; font-weight:900';
+							} else return 'fill: black;';
 						})
 						.text(function(){return data.columns[i];});
 						
@@ -183,13 +114,17 @@
 						.attr('x', w_cell*(0))
 						//.attr('y', h_cell*(i+1))
 						.attr('style', 'stroke:white; fill:white; opacity:0.5');					
-					row.append('text').attr('class', 'rowLabelText')
+					row.append('text').attr('class', 'rowLabel')
 						.attr('id', 'rowLabelText' + i)
 						//.attr('x', w_cell*(i+1)+w_cell*1/10).attr('y', h_cell*(9)/10)
 						.attr('transform', function(){
 							var x = w_cell*0/10;
 							var y = 0*h_cell*(i+1) + 1/2*h_cell;
 							return 'translate(' + x + ',' + y + ')';
+						}).attr('style', function(){
+							if (i==1 || i==4){
+								return 'fill: red; font-weight:900';
+							} else return 'fill: black;';
 						})
 						.text(function(){return data.columns[i];});					
 				
@@ -210,100 +145,18 @@
 									
 								return 'stroke: none; stroke-width: none; opacity: 0.5; fill:' + str;
 							});						
-					}*/
-					/*svg.append('line')
-						.attr('x1', 2.5*w_cell).attr('y1', 1.5*h_cell)
-						.attr('x2', -1*w_cell).attr('y2', 1*h_cell)
-						.attr('style', 'stroke: #afc62d; stroke-width: 3;')
-					svg.append('line')
-						.attr('x1', 1.5*w_cell).attr('y1', 2.5*h_cell)
-						.attr('x2', -1*w_cell).attr('y2', 1.2*h_cell)
-						.attr('style', 'stroke: #afc62d; stroke-width: 3;')		
-					svg.append('text')
-						.attr('x', -4.5*w_cell).attr('y', 1*h_cell+10)
-						.attr('style', 'fill: #758905; font-weight: 900;')
-						.text('John and Mary are friends.')	
-						
-						
-					svg.append('line')
-						.attr('x1', 3.5*w_cell).attr('y1', 2.5*h_cell)
-						.attr('x2', 5.5*w_cell).attr('y2', 3*h_cell)
-						.attr('style', 'stroke: #534dd6; stroke-width: 3;')
-					svg.append('line')
-						.attr('x1', 2.5*w_cell).attr('y1', 3.5*h_cell)
-						.attr('x2', 5.5*w_cell).attr('y2', 3.2*h_cell)
-						.attr('style', 'stroke: #534dd6; stroke-width: 3;')		
-					svg.append('text')
-						.attr('x', 6*w_cell).attr('y', 3*h_cell+10)
-						.attr('style', 'fill: #100b8c; font-weight: 900;')
-						.text('John and Mary are friends.')							
-						*/
-				}
-				var ver = [];
-				d3.selectAll('.cell').on('mousedown', function(){
-					var columnY = parseInt(this.getAttribute('id').split('(')[1].split(')')[0].split(',')[1])+1;
-					var rowX = parseInt(this.getAttribute('id').split('(')[1].split(')')[0].split(',')[0])+1;
-					var id = this.getAttribute('id');
-					
-					if (ans[counter-1].includes(columnY) && ans[counter-1].includes(rowX) && columnY != rowX && ver.includes(id) == false){
-						this.setAttribute('style', 'fill: black');
-						ver.push(this.getAttribute('id'));
-						if (ver.length == 2){
-							ver = [];
-
-							counter++;
-							var text = document.getElementById('statement').childNodes;
-							document.getElementById('statement').removeChild(text[0]);
-							d3.select('#statement').remove();
-							var newText = d3.select('#visualization').append('text')
-								.attr('class', 'noselect')
-								.attr('id', 'statement')
-								.attr('x', 25).attr('y', 25)
-								.attr('style', 'font-weight: 900; fill:#008B8B;')
-								.text('Statement ' + counter + ': '+ statements[counter-1]);	
-
-							var text = document.getElementById('warning').childNodes;
-							document.getElementById('warning').removeChild(text[0]);
-							d3.select('#warning').remove();									
-							var text_1 = d3.select('#visualization').append('text')
-								.attr('class', 'noselect')
-								.attr('id', 'warning')
-								.attr('x', 25).attr('y', 40)
-								.attr('style', 'font-weight: 900; fill: red;')
-								.text(' ');		
-							
-							if (counter == 6) d3.selectAll('.cell').on('mousedown', null);
-													
-						} else {
-							var text = document.getElementById('warning').childNodes;
-							document.getElementById('warning').removeChild(text[0]);
-							d3.select('#warning').remove();									
-							var text_1 = d3.select('#visualization').append('text')
-								.attr('class', 'noselect')
-								.attr('id', 'warning')
-								.attr('x', 25).attr('y', 40)
-								.attr('style', 'font-weight: 900; fill: red;')
-								.text('Make sure you select the other square that reflects this relationship.');							
-						}
-					} else {
-						var text = document.getElementById('warning').childNodes;
-						document.getElementById('warning').removeChild(text[0]);
-						d3.select('#warning').remove();									
-						var text_1 = d3.select('#visualization').append('text')
-							.attr('class', 'noselect')
-							.attr('id', 'warning')
-							.attr('x', 25).attr('y', 40)
-							.attr('style', 'font-weight: 900; fill: red;')
-							.text('Your selection does not reflect this relatonship.');								
 					}
-					
-										/*var str = this.getAttribute('id') + ' in ' + this.parentNode.getAttribute('id');
+		
+				}
+				
+				d3.selectAll('.cell').on('mousedown', function(){
+										var str = this.getAttribute('id') + ' in ' + this.parentNode.getAttribute('id');
 										var ind1 = -1;
 										var ind2 = -1;
 										var ind3 = -1; 
 										
 										//document.getElementById('myText2').value = str;
-										var ind1 = parseInt(this.getAttribute('id').split('cell')[1]);
+										/*var ind1 = parseInt(this.getAttribute('id').split('cell')[1]);
 										if (this.parentNode.getAttribute('id').split('gr').length == 1){
 											var ind2 = parseInt(this.parentNode.getAttribute('id').split('gc')[1])
 										} else {
@@ -362,15 +215,14 @@
 												d3.selectAll('#line' + ind2 + '_' + ind1)
 													.attr('style', 'stroke: ' + colors[sequence] + '; stroke-width: 4px');												
 											}											
-										}
+										}*/
 
 										
-										//document.getElementById('logMsg').innerHTML = 'Try to select column/row labels.';
+										document.getElementById('logMsg').innerHTML = 'Try to select column/row labels.'	;
 										userlog.push(['mousedown', str, timeCount/100]);
 										var clickdata = arrayToStr(userlog);
-										
-										document.getElementById('clickdata').value = clickdata;
-										*/
+						
+										document.getElementById('clickdata').value = clickdata;										
 										});
 				
 				for (var i = 0; i < data.length; i++){
@@ -386,60 +238,225 @@
 				var dx, dy;
 				var mousedrag;
 				
-				/*d3.selectAll('.columnLabel')
+		
+				
+				d3.selectAll('.columnLabel')
 					.on('mousedown', function(){
-						
-						var id = parseInt(this.getAttribute('id').split('columnLabel')[1]);
-						userlog.push(['mouseClick',this.getAttribute('id'),timeCount/100]);
-						var clickdata = arrayToStr(userlog);
-						
-						document.getElementById('clickdata').value = clickdata;						
-						
-						document.getElementById('logMsg').innerHTML = "You have selected a column. Try to select matrix elements.";
-
-					});
-				d3.selectAll('.columnLabelText')
-					.on('mousedown', function(){
+						if (mouseEvt == 1){
+						var logtime = timeCount/100;
+						var logStr = 'Column ' + this.parentNode.getAttribute('id');	
+						var parent = this.parentNode;
+						var temp = parent.cloneNode(true);
+						d3.select(temp).selectAll('.cell')
+							.attr('style', function() {
+								var style = this.getAttribute('style').split(';');
+								var str = 'stroke: red; stroke-width: 5px;';
+								for (var s = 2; s < style.length; s++){
+									if (s == style.length - 1){
+										if (style[s] == ' fill:black')
+										str = str + ' fill:red';
+										else str = str + ' fill:white'; 
+									} else {
+										str = str + style[s]+ ';'; 
+									}
+								}
+								return str;								
+							});
+						//d3.select(temp).selectAll('.columnLabel')
+						//	.attr('style', 'fill: white; opacity: 0.5');
 							
-						var id = parseInt(this.getAttribute('id').split('columnLabelText')[1]);
-						userlog.push(['mouseClick',this.getAttribute('id'),timeCount/100]);
-						var clickdata = arrayToStr(userlog);
+						d3.select(temp).selectAll('text')
+							.attr('fill', 'red');
+							
+						document.getElementsByClassName('canvas')[0].appendChild(temp);
+						mousedrag = 1;
+						dx = event.clientX - parent.getAttribute('transform').split('(')[1].split(',')[0];	
 						
-						document.getElementById('clickdata').value = clickdata;						
-						document.getElementById('logMsg').innerHTML = "You have selected a column. Try to select matrix elements.";
-
-											
+						d3.select('.canvas')
+							.on('mousemove', function(){
+								var x = event.clientX-dx;
+								var y = parent.getAttribute('transform').split(')')[0].split(',')[1];
+								if (x < w_cell){
+									x = w_cell;
+								} else if (x > w_cell * data.length){
+									x = w_cell * data.length;
+								}								
+								if (mousedrag == 1)
+								temp.setAttribute('transform', 'translate(' + x + ',' + y + ')');
+							})
+							.on('mouseup', function(){
+								//var x = event.clientX;
+								var x = parseFloat(temp.getAttribute('transform').split(',')[0].split('(')[1]);
+								var id = temp.getAttribute('id');
+								
+								temp.remove();
+								mousedrag = 0;
+								var newColumn = swapColumn(id, x);
+								logStr = logStr + ' to gc' + newColumn;
+								userlog.push([logStr, logtime]);
+								var clickdata = arrayToStr(userlog);
+						
+								document.getElementById('clickdata').value = clickdata;								
+								d3.select('.canvas').on('mousemove', null);
+								d3.select('.canvas').on('mouseup', null);
+							});
+						}	
+						//var c = 0;
 					});
+					
+					
 				d3.selectAll('.rowLabel')
 					.on('mousedown', function(){
-							
-						var id = parseInt(this.getAttribute('id').split('rowLabel')[1]);
-						userlog.push(['mouseClick',this.getAttribute('id'),timeCount/100]);
-						var clickdata = arrayToStr(userlog);
+						if (mouseEvt == 1){
+						var logtime = timeCount/100;
+						var logStr = 'Row ' + this.parentNode.getAttribute('id');	
+						var parent = this.parentNode;
+						mousedrag = 1;
 						
-						document.getElementById('clickdata').value = clickdata;						
-						document.getElementById('logMsg').innerHTML = "You have selected a row. Try to select matrix elements.";
+						var temp = parent.cloneNode(true);
+						d3.select(temp).selectAll('.cell')
+							.attr('style', function() {
+								var style = this.getAttribute('style').split(';');
+								var str = 'stroke: red; stroke-width: 5px;';
+								for (var s = 2; s < style.length; s++){
+									if (s == style.length - 1){
+										if (style[s] == ' fill:black')
+										str = str + ' fill:red';
+										else str = str + ' fill:white'; 
+									} else {
+										str = str + style[s]+ ';'; 
+									}
+								}
+								return str;								
+							});						
 
-											
-					});
-				d3.selectAll('.rowLabelText')
-					.on('mousedown', function(){
+						d3.select(temp).selectAll('.rowLabel')
+							//.attr('style', 'fill: white; opacity: 0.5');
 							
-						var id = parseInt(this.getAttribute('id').split('rowLabelText')[1]);
-						userlog.push(['mouseClick',this.getAttribute('id'),timeCount/100]);
-						var clickdata = arrayToStr(userlog);
+						d3.select(temp).selectAll('text')
+							.attr('fill', 'red');
+						document.getElementsByClassName('canvas')[0].appendChild(temp);
+						mousedrag = 1;						
+						dy = event.clientY - parent.getAttribute('transform').split(')')[0].split(',')[1];	
 						
-						document.getElementById('clickdata').value = clickdata;						
-						document.getElementById('logMsg').innerHTML = "You have selected a row. Try to select matrix elements.";
+						d3.select('.canvas')
+							//.attr('style', 'fill: white; stroke: red; stroke-width: 5px; opacity: 0.5')
+							.on('mousemove', function(){
+								var y = event.clientY-dy;
+								//var y = this.getAttribute('transform').split(')')[0].split(',')[1];
+								if (y < h_cell){
+									y = h_cell;
+								} else if (y > h_cell * data.length){
+									y = h_cell * data.length;
+								}								
+								if (mousedrag == 1)
+								temp.setAttribute('transform', 'translate(' + 0 + ',' + y + ')');
+							})
+							.on('mouseup', function(){
+								
+								
+								mousedrag = 0;
+								var id = temp.getAttribute('id');
+								var y = parseFloat(temp.getAttribute('transform').split(',')[1].split(')')[0]);
+
+								temp.remove();
+								var newRow = swapRow(id, y);
+								logStr = logStr + ' to gr' + newRow;
+								userlog.push([logStr, logtime]);	
+										var clickdata = arrayToStr(userlog);
+						
+										document.getElementById('clickdata').value = clickdata;															
+								d3.select('.canvas').on('mouseup', null);
+								d3.select('.canvas').on('mousemove', null);
+							});
+						}
+
+					});					
 					
-					});
-				*/														
+		
+				
+				// draw node-link diagram
+				r = 200;
+				mid_x = 750;
+				mid_y = 300;
+				phi = Math.PI*2/ind.length;
+				p_x = [];
+				p_y = [];
+				for (var i = 0; i < ind.length; i++){
+					p_x[i] = mid_x + r*Math.cos(phi*i);
+					p_y[i] = mid_y + r*Math.sin(phi*i);
+					svg.append('circle')
+						.attr('r', 2)
+						.attr('style', 'fill: black')
+						.attr('cx', p_x[i])
+						.attr('cy', p_y[i]);
+				}
+				for (var i = 0; i < ind.length; i++){
+					for (var j = i+1; j < ind.length; j++){
+						if (mat[i][j] == "1"){
+							svg.append('line')
+								.attr('id', 'line' + i+'_'+j)
+								.attr('class','links')
+								.attr('x1', p_x[i]).attr('y1', p_y[i])
+								.attr('x2', p_x[j]).attr('y2', p_y[j])
+								.attr('style', function(){
+									var ind1 = relations[sequence][0];
+									var ind2 = relations[sequence][1];
+									if ((i == ind1 && j == ind2) || (i == ind2 && j == ind1)){
+										return 'stroke: ' + colors[sequence] + '; stroke-width: 4px;';
+									} else {
+										return 'stroke: black; stroke-width: 4px;';
+									}
+									
+								});
+						}
+					}
+				}			
+				var rx = 50;
+				var ry = 25;							
+				for (var i = 0; i < ind.length; i++){
+					p_x[i] = mid_x + r*Math.cos(phi*i);
+					p_y[i] = mid_y + r*Math.sin(phi*i);
+					svg.append('ellipse').attr('class', 'nodeLabel')
+						.attr('id', 'nodeLabel_'+i)
+						.attr('rx', 50)
+						.attr('ry', 25)
+						.attr('style', function(){
+							var str;
+							if (i == 1 || i == 4){
+								return 'stroke: red; stroke-width: 2;fill: white';
+							}
+							else {
+								return 'stroke: black; stroke-width: 2;fill: white';
+							}
+						})
+						.attr('cx', p_x[i])
+						.attr('cy', p_y[i]);
+				}
+				for (var i = 0; i < ind.length; i++){
+					p_x[i] = mid_x + r*Math.cos(phi*i);
+					p_y[i] = mid_y + r*Math.sin(phi*i);
+					svg.append('text').attr('class', 'nodeLabel')
+						.attr('id', 'nodeLabel' + i)
+						//.attr('r', 2)
+						.attr('style', function(){
+							if (i == 1 || i == 4){
+								return 'fill: red; font-weight: 900';
+							} else {
+								return 'fill: black';
+							}
+							
+						})
+						.attr('x', p_x[i]-rx/2)
+						.attr('y', p_y[i])
+						.text(ind[i]);
+				}																
 			});
 			function swapRow(id, y){
 				var row = parseInt(id.split('gr')[1]);
 				
 				var newRow;
-				
+			
 				for (var i = 0; i < celldata.length; i++){
 					if (y <= (i+1)*h_cell && y > (i+0.5)*h_cell){
 						newRow = i;
@@ -447,6 +464,11 @@
 						newRow = i-1;
 					}
 				}
+				if (row == common){
+					common = newRow;
+				} else if (newRow == common){
+					common = row;
+				}				
 				if (row == newRow) return row;
 
 				
@@ -480,6 +502,7 @@
 						clearInterval(timing);
 						mouseEvt = 1;
 						rest();
+						runCheck();
 						//return newRow;
 					}
 					else {
@@ -523,7 +546,7 @@
 				document.getElementById('gc_' + row).setAttribute('id', 'gc' + row);	
 				document.getElementById('gc_' + newRow).setAttribute('id', 'gc' + newRow);				
 				}					
-				//var c;
+				
 			}
 			
 			function findCell(groups, id, ind){
@@ -578,6 +601,11 @@
 						newColumn = i-1;
 					}
 				}
+				if (column == common){
+					common = newColumn;
+				} else if (newColumn == common){
+					common = column;
+				}
 				if (column == newColumn) return column;
 
 				
@@ -611,7 +639,7 @@
 						clearInterval(timing);
 						mouseEvt = 1;
 						rest();
-						
+						runCheck();
 					}
 					else {
 						// deactivate any re-ordering
@@ -669,6 +697,99 @@
 									
 				//var c;
 			}			
+			
+			function runCheck(){
+				var children = document.getElementById('gr'+common).childNodes;
+				var children2 = document.getElementById('gc'+common).childNodes;
+				var cell = [];
+				for (var i = 0; i < children.length; i++){
+					if (children[i].getAttribute('class') == 'cell'){
+						var str = children[i].getAttribute('style').split(':');
+						if (str[str.length-1] == 'black'){
+							var ind = parseInt(children[i].getAttribute('id').split('cell')[1]);
+							cell.push([i,ind]);
+						}
+					}
+				}
+				if (Math.abs(cell[0][1]-cell[1][1]) == 1){
+					document.getElementById('logMsg').innerHTML = 'Great Job! Now you may move onto the next tutorial';
+					
+					
+					children[cell[0][0]].setAttribute('style', 'stroke: red ; stroke-width: 10; opacity: 0.5; fill:black' );	
+					children[cell[1][0]].setAttribute('style', 'stroke: red ; stroke-width: 10; opacity: 0.5; fill:black' );
+					
+					d3.select('#gc'+cell[0][1]).select('#cell'+common)
+						.attr('style', 'stroke: red ; stroke-width: 10; opacity: 0.5; fill:black')
+					d3.select('#gc'+cell[1][1]).select('#cell'+common)
+						.attr('style', 'stroke: red ; stroke-width: 10; opacity: 0.5; fill:black')
+											
+					children2[cell[0][0]].setAttribute('style', 'stroke: red ; stroke-width: 10; opacity: 0.5; fill:black' );	
+					children2[cell[1][0]].setAttribute('style', 'stroke: red ; stroke-width: 10; opacity: 0.5; fill:black' );
+
+					d3.select('#gr'+cell[0][1]).select('#cell'+common)
+						.attr('style', 'stroke: red ; stroke-width: 10; opacity: 0.5; fill:black')
+					d3.select('#gr'+cell[1][1]).select('#cell'+common)
+						.attr('style', 'stroke: red ; stroke-width: 10; opacity: 0.5; fill:black')
+						
+						
+					d3.select('#line0_1').attr('style', 'stroke: red; stroke-width: 4px');
+					d3.select('#line1_0').attr('style', 'stroke: red; stroke-width: 4px');
+					d3.select('#line0_4').attr('style', 'stroke: red; stroke-width: 4px');
+					d3.select('#line4_0').attr('style', 'stroke: red; stroke-width: 4px');
+					
+					d3.select('#nodeLabel_0').attr('style', 'stroke: blue; stroke-width: 2;fill: white');
+					d3.select('#nodeLabel0').attr('style', 'fill: blue; font-weight:900');
+					
+					d3.select('#columnLabelText0').attr('style', 'fill: blue; font-weight:900');
+					d3.select('#rowLabelText0').attr('style', 'fill: blue; font-weight:900');
+					
+					d3.select('')
+						
+					//d3.select('#line'+common+'_'+cell[0][1])
+					//	.attr('style', 'stroke: red; stroke-width: 4px;');
+					//d3.select('#line'+cell[0][1]+'_'+common)
+					//	.attr('style', 'stroke: red; stroke-width: 4px;')	
+
+					//d3.select('#line'+common+'_'+cell[1][1])
+					//	.attr('style', 'stroke: red; stroke-width: 4px;');
+					//d3.select('#line'+cell[1][1]+'_'+common)
+					//	.attr('style', 'stroke: red; stroke-width: 4px;')
+						
+
+					//d3.select('#line'+common+'_'+cell[0][1])
+					//	.attr('style', 'stroke: red; stroke-width: 4px;');
+					//d3.select('#line'+cell[0][1]+'_'+common)
+					//	.attr('style', 'stroke: red; stroke-width: 4px;')						
+																		
+					task = 1;								
+				} else {
+					children[cell[0][0]].setAttribute('style', 'stroke: none ; stroke-width: 0; opacity: 0.5; fill:black' );	
+					children[cell[1][0]].setAttribute('style', 'stroke: none ; stroke-width: 0; opacity: 0.5; fill:black' );
+					
+					d3.select('#gc'+cell[0][1]).select('#cell'+common)
+						.attr('style', 'stroke: none ; stroke-width: 0; opacity: 0.5; fill:black')
+					d3.select('#gc'+cell[1][1]).select('#cell'+common)
+						.attr('style', 'stroke: none ; stroke-width: 0; opacity: 0.5; fill:black')
+											
+					children2[cell[0][0]].setAttribute('style', 'stroke: none ; stroke-width: 0; opacity: 0.5; fill:black' );	
+					children2[cell[1][0]].setAttribute('style', 'stroke: none ; stroke-width: 0; opacity: 0.5; fill:black' );
+
+					d3.select('#gr'+cell[0][1]).select('#cell'+common)
+						.attr('style', 'stroke: none ; stroke-width: 0; opacity: 0.5; fill:black')
+					d3.select('#gr'+cell[1][1]).select('#cell'+common)
+						.attr('style', 'stroke: none ; stroke-width: 0; opacity: 0.5; fill:black')		
+					d3.select('#line0_1').attr('style', 'stroke: black; stroke-width: 4px');
+					d3.select('#line1_0').attr('style', 'stroke: black; stroke-width: 4px');
+					d3.select('#line0_4').attr('style', 'stroke: black; stroke-width: 4px');
+					d3.select('#line4_0').attr('style', 'stroke: black; stroke-width: 4px');
+					
+					d3.select('#nodeLabel_0').attr('style', 'stroke: black; stroke-width: 2;fill: white');
+					d3.select('#nodeLabel0').attr('style', 'fill: black; font-weight:900');
+					
+					d3.select('#columnLabelText0').attr('style', 'fill: black; ');
+					d3.select('#rowLabelText0').attr('style', 'fill: black; ');															
+				}
+			}
 			
 		function swapCellc(ind1, ind2){
 			for (var i = 0; i < celldata.length; i++){

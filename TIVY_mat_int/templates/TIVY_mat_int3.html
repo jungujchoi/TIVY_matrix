@@ -8,7 +8,7 @@
 <div class="container">
 
 <header>
-   <h1>Matrix Visualization Tutorials</h1>
+   <h2>Matrix Visualization Tutorials</h2>
 </header>
   
 <!--article>
@@ -25,28 +25,95 @@
 	
 	<div id = "viz1" class='vizContainer' onmousedown="mouseDown()" >
 		<h1 id = "problem">Step: ({{ session['current'] + 1}} out of 5)</h1>
-		
-		
-		
-			
-			
-			<br>
-			<br>
-			<input id = 'clickdata' name='clickdata' value='0' style="display:none">		
-			<br>
-			<script src="{{ url_for('static', filename='js/task3_ajax_q.js') }}"></script>		
+		<!--svg width="1200" height="600" id = "visualization1"></svg-->
+			<p class = "Title1">Networks</p>
+			<ol >
+				<li class = "Title2">In Node Link Diagram, nodes are represented as point marks (circles) and links are represented as line marks connecting the point marks. 
 
+				</li>
+
+			</ol>
+			
+			<svg width='1200' height='300' id = 'visualization'></svg>
+			<script>
+				
+				var svg = d3.select('#visualization');
+				var r = 30;
+				var cx1 = 600, cy1 = 80;
+				var cx2 = 450, cy2 = 180;
+				var cx3 = 750, cy3 = 180;
+				
+				var line1 = svg.append('line')
+					.attr('x1', cx1).attr('y1', cy1)
+					.attr('x2', cx2).attr('y2', cy2)
+					.attr('style', 'stroke-width: 2; stroke:black');
+
+				var line2 = svg.append('line')
+					.attr('x1', cx1).attr('y1', cy1)
+					.attr('x2', cx3).attr('y2', cy3)
+					.attr('style', 'stroke-width: 2; stroke:black');
+				
+				var cir1 = svg.append('circle')
+					.attr('r', 30)
+					.attr('cx', cx1).attr('cy',cy1)
+					.attr('style', 'fill: white; stroke-width: 2; stroke:black');
+					
+				var text1 = svg.append('text')
+					.attr('x', cx1 - r/2).attr('y', cy1+12/2)
+					.attr('style', 'font: sans-serif; font-size: 12; font-weight:900')
+					.text('Mary')	
+					
+				var cir2 = svg.append('circle')
+					.attr('r', 30)
+					.attr('cx', cx2).attr('cy',cy2)
+					.attr('style', 'fill: white; stroke-width: 2; stroke:black');
+
+				var text2 = svg.append('text')
+					.attr('x', cx2 - r/2).attr('y', cy2+12/2)
+					.attr('style', 'font: sans-serif; font-size: 12; font-weight:900')
+					.text('John')	
+					
+				var cir3 = svg.append('circle')
+					.attr('r', 30)
+					.attr('cx', cx3).attr('cy',cy3)
+					.attr('style', 'fill: white; stroke-width: 2; stroke:black');	
+
+				var text3 = svg.append('text')
+					.attr('x', cx3 - r/2).attr('y', cy3+12/2)
+					.attr('style', 'font: sans-serif; font-size: 12; font-weight:900')
+					.text('Tom');
+					
+				var text_1 = svg.append('text')
+					.attr('x', (cx1+cx2)/2-200).attr('y', (cy1+cy2)/2)
+					.text('John and Mary are friends');			
+				var text_2 = svg.append('text')
+					.attr('x', (cx1+cx3)/2+10).attr('y', (cy1+cy2)/2)
+					.text('Mary and Tom are friends.');																			
+			</script>
+			
+			<!--p id = 'logMsg'>Please read the information below before proceed.</p-->
+			<button id = "submit" class = 'nav_backward' type = "submit" >Previous</button>	
+			<button id = "submit" class = 'nav_forward' type = "submit" >Next</button>		
+			<br>
+			
+			
+			<br>
+			<br>
+			<input id = 'clickdata' name='clickdata' value='0' style='display:none'>
+			<input id = 'totaltime' name='totaltime' value='0' style='display:none'>		
+			<br>
+			<!--script src="{{ url_for('static', filename='js/task1_ajax_q.js') }}"></script-->		
+			
 		<!--p id = "statement">Problem Statement</p-->
 		
-		<svg width="1200" height="600" id = "visualization1"></svg>
-		<script src="{{ url_for('static', filename='js/task3.js') }}"></script>
-
+		
+		<!--script src="{{ url_for('static', filename='js/task1.js') }}"></script-->
 		
 	</div>
-	<div id = "msglog" onmousedown="mouseDown()" >
-		<p id = 'logMsg'>Please click the elements in the matrix visualization that correspond to the highlighted connection.</p>
-		<button id = "submit" type = "submit" >Next</button>
-	</div>
+	<!--div id = "msglog" onmousedown="mouseDown()" >
+		
+		
+	</div-->
 	</form>
 
   
