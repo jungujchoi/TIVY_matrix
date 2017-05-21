@@ -80,6 +80,7 @@
 			//Kevin and Philip are friends
 			ans[4] = [rorder[4][0],rorder[4][1]];		
 			statements[4] = names[ans[4][0]-1] + " and "+ names[ans[4][1]-1] + " are friends";	
+
 				
 				/*// John and Kevin are friends
 				ans[0] = [3, 2];
@@ -295,15 +296,17 @@
 
 									d3.selectAll('.blueborder')
 										.attr('style', 'fill: black');
-
+									
+									if (counter < ans.length){
 									var ix = ans[counter][0] - 1;
 									var jy = ans[counter][1] - 1;
-									d3.select('#cell' + ix + '_' + jy)
-										.attr('class', 'blueborder')
-										.attr('style', 'fill: black; stroke: blue; stroke-width: 6px');
-									d3.select('#cell' + jy + '_' + ix)
-										.attr('class', 'blueborder')
-										.attr('style', 'fill: black; stroke: blue; stroke-width: 6px');		
+										d3.select('#cell' + ix + '_' + jy)
+											.attr('class', 'blueborder')
+											.attr('style', 'fill: black; stroke: blue; stroke-width: 6px');
+										d3.select('#cell' + jy + '_' + ix)
+											.attr('class', 'blueborder')
+											.attr('style', 'fill: black; stroke: blue; stroke-width: 6px');
+									}		
 									/*var text = document.getElementById('title').childNodes;
 									document.getElementById('title').removeChild(text[0]);
 									d3.select('#title').remove();
