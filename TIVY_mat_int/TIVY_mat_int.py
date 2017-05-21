@@ -47,7 +47,7 @@ def index():
     #db = get_db()
     #cur = db.execute('select IP_add, Q1_n, Q1_ans, Q1_click, Q1_stime, Q1_etime, Q2_n, Q2_ans, Q2_click, Q2_stime, Q2_etime from entries order by id desc')
     #entries = cur.fetchall()    
-    return render_template('TIVY_mat_int.html')
+    return render_template('TIVY_mat_welcome.html')
 
 def get_ip():
     return jsonify(origin=request.headers.get('X-Forwarded-For', request.remote_addr))
@@ -117,7 +117,7 @@ def progress():
                #[str(session['IP']), str(session['current'][ind]), str(session['click'][ind])])
             db.commit()  
         session['current'] = session['current'] + 1              
-        return render_template('TIVY_mat_int2.html')            
+        return render_template('TIVY_mat_int.html')            
 
 @app.route('/progress2', methods=['GET', 'POST'])
 def progress2():
@@ -135,7 +135,7 @@ def progress2():
                [session['IP'], '2', session['click'][ind]])
             db.commit()
         session['current'] = session['current'] + 1     
-        return render_template('TIVY_mat_int3.html')  
+        return render_template('TIVY_mat_int2.html')  
         
 @app.route('/progress3', methods=['GET', 'POST'])
 def progress3():
@@ -153,7 +153,7 @@ def progress3():
         #db.commit()
         
         #session['current'] = session['current'] + 1       
-        return render_template('TIVY_mat_int4.html')               
+        return render_template('TIVY_mat_int3.html')               
 
 @app.route('/progress4', methods=['GET', 'POST'])
 def progress4():
@@ -180,7 +180,7 @@ def progress4():
         
 
         session['current'] = session['current'] + 1   
-        return render_template('TIVY_mat_int5.html')           
+        return render_template('TIVY_mat_int4.html')           
 
 @app.route('/progress5', methods=['GET', 'POST'])
 def progress5():
@@ -198,7 +198,7 @@ def progress5():
         #db.commit()
         
         #session['current'] = session['current'] + 1       
-        return render_template('TIVY_mat_int6.html') 
+        return render_template('TIVY_mat_int5.html') 
 
 @app.route('/progress6', methods=['GET', 'POST'])
 def progress6():
@@ -225,7 +225,7 @@ def progress6():
         
 
         session['current'] = session['current'] + 1   
-        return render_template('TIVY_mat_int7.html')  
+        return render_template('TIVY_mat_int6.html')  
 
 @app.route('/progress7', methods=['GET', 'POST'])
 def progress7():
@@ -243,7 +243,7 @@ def progress7():
         #db.commit()
         
         #session['current'] = session['current'] + 1       
-        return render_template('TIVY_mat_int8.html') 
+        return render_template('TIVY_mat_int7.html') 
 
 @app.route('/progress8', methods=['GET', 'POST'])
 def progress8():
@@ -261,7 +261,7 @@ def progress8():
         #db.commit()
         
         #session['current'] = session['current'] + 1       
-        return render_template('TIVY_mat_int9.html') 
+        return render_template('TIVY_mat_int8.html') 
 
 
 @app.route('/progress9', methods=['GET', 'POST'])
@@ -280,7 +280,7 @@ def progress9():
         #db.commit()
         
         #session['current'] = session['current'] + 1       
-        return render_template('TIVY_mat_int10.html') 
+        return render_template('TIVY_mat_int9.html') 
     
 @app.route('/progress10', methods=['GET', 'POST'])
 def progress10():
@@ -298,8 +298,25 @@ def progress10():
         #db.commit()
         
         #session['current'] = session['current'] + 1       
+        return render_template('TIVY_mat_int10.html')     
+
+@app.route('/progress11', methods=['GET', 'POST'])
+def progress11():
+    if request.method == 'POST':
+        ind = session['current']
+
+        #session['endtime'][ind] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        #session['starttime'][ind+1] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+            
+        #session['click'][ind] = request.form['clickdata']
+        #session['time'][ind] = request.form['totaltime']
+        #db = get_db()    
+        #db.execute('insert into userlog (IP_add, Task_number, user_log) values (?, ?, ?)',
+        #   [session['IP'], '3', session['click'][ind]])
+        #db.commit()
+        
+        #session['current'] = session['current'] + 1       
         return render_template('TIVY_mat_int11.html')     
-    
 
 
 @app.route('/selection', methods=['GET', 'POST'])

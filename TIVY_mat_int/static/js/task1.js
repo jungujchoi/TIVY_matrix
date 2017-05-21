@@ -13,26 +13,56 @@
 				var click, release;
 				var ans = [];
 				var statements = [];
+				var rand = [];
+				
+				while (rand.length <= 4){
+					var numb = Math.round(Math.random()*4);
+					if (rand.indexOf(numb) == -1) rand.push(numb) 
+				}
+				var nameBank = ['Mary', 'John', 'Tom', 'Kevin', 'Sue'];
+				var names = [' ',' ',' ',' ',' '];
+				for (var i = 0; i < 5; i++){
+					names[rand[i]] = nameBank[i];
+				}
+				
+				var rand2 = [];
+				while (rand2.length <= 4){
+					var numb2 = Math.round(Math.random()*4) + 1;
+					var numb3 = Math.round(Math.random()*4) + 1;
+					var str = numb2 + '_' + numb3;
+					var str2 = numb3 + '_' + numb2;
+					if (numb2 != numb3){
+						if (str != '3_5' && str != '5_3'){
+							if (rand2.indexOf(str) == -1 && rand2.indexOf(str2) == -1) rand2.push(str);
+						} 
+					} 				
+				}
+				var rorder = [];
+				for (var i = 0; i < rand2.length; i++){
+					rorder[i] = [];
+					rorder[i][0] = parseInt(rand2[i].split('_')[0]);
+					rorder[i][1] = parseInt(rand2[i].split('_')[1]);
+				}				
 				// Mary = 1
 				// John = 2
 				// Tom = 3
 				// Kevin = 4
 				// Sue = 5
 				// John and Tom are friends
-				ans[0] = [2, 3];
-				statements[0] = "John and Tom are friends";
+				ans[0] = [rorder[0][0],rorder[0][1]];
+				statements[0] = names[ans[0][0]-1] + " and "+ names[ans[0][1]-1] + " are friends";
 				
 				// Sue and Kevin are friends
-				ans[1] = [5, 4];
-				statements[1] = "Sue and Kevin are friends";
+				ans[1] = [rorder[1][0],rorder[1][1]];
+				statements[1] = names[ans[1][0]-1] + " and "+ names[ans[1][1]-1] + " are friends";
 				
 				// Kevin and Mary are friends
-				ans[2] = [4, 1];
-				statements[2] = "Kevin and Mary are friends";
+				ans[2] = [rorder[2][0],rorder[2][1]];
+				statements[2] = names[ans[2][0]-1] + " and "+ names[ans[2][1]-1] + " are friends";
 				
 				// Tom and Mary are friends
-				ans[3] = [3, 1];
-				statements[3] = "Tom and Mary are friends";
+				ans[3] = [rorder[3][0],rorder[3][1]];
+				statements[3] = names[ans[3][0]-1] + " and "+ names[ans[3][1]-1] + " are friends";
 				
 				statements[4] = "Great job!"
 				/*var line1 = svg.append('line')
@@ -50,7 +80,7 @@
 					.attr('class', 'noselect')
 					.attr('x', cx1 - r/2).attr('y', cy1+12/2)
 					.attr('style', 'font: sans-serif; font-size: 12; font-weight:900')
-					.text('Mary')	
+					.text(names[0])	
 
 				var cir1 = svg.append('circle')
 					//.attr('id', 'circ1')
@@ -71,7 +101,7 @@
 					.attr('class', 'noselect')
 					.attr('x', cx2 - r/2).attr('y', cy2+12/2)
 					.attr('style', 'font: sans-serif; font-size: 12; font-weight:900')
-					.text('John')	
+					.text(names[1])	
 					
 				var cir2 = svg.append('circle')
 					//.attr('id', 'circ2')
@@ -91,7 +121,7 @@
 					.attr('class', 'noselect')
 					.attr('x', cx3 - r/2).attr('y', cy3+12/2)
 					.attr('style', 'font: sans-serif; font-size: 12; font-weight:900')
-					.text('Tom');
+					.text(names[2]);
 
 				var cir3 = svg.append('circle')
 					//.attr('id', 'circ3')
@@ -111,7 +141,7 @@
 					.attr('class', 'noselect')
 					.attr('x', cx4 - r/2).attr('y', cy4+12/2)
 					.attr('style', 'font: sans-serif; font-size: 12; font-weight:900')
-					.text('Kevin');		
+					.text(names[3]);		
 
 				var cir4 = svg.append('circle')
 					//.attr('id', 'circ4')
@@ -132,7 +162,7 @@
 					.attr('class', 'noselect')
 					.attr('x', cx5 - r/2).attr('y', cy5+12/2)
 					.attr('style', 'font: sans-serif; font-size: 12; font-weight:900')
-					.text('Sue');
+					.text(names[4]);
 					
 				var cir5 = svg.append('circle')
 					//.attr('id', 'circ5')
@@ -152,7 +182,7 @@
 					.attr('id', 'statement')
 					.attr('x', 25).attr('y', 25)
 					.attr('style', 'font-weight: 900; fill:#008B8B;')
-					.text('Statement ' + counter + ': John and Tom are friends');
+					.text('Statement ' + counter + ': '+ statements[0]);
 				var text_1 = svg.append('text')
 					.attr('class', 'noselect')
 					.attr('id', 'warning')

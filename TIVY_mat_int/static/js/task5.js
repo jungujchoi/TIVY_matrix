@@ -21,10 +21,70 @@
 				// John = 3
 				// Kevin = 4
 				// Sue = 5
+
+
+			var rand = [];
+			var rand2 = [];	
+			while (rand.length <= 4){
+				var numb = Math.round(Math.random()*4);
+				if (rand.indexOf(numb) == -1) rand.push(numb)
+
+			}
+			while (rand2.length <= 4){
+				var numb2 = Math.round(Math.random()*4) + 1;
+				var numb3 = Math.round(Math.random()*4) + 1;
+				var str = numb2 + '_' + numb3;
+				var str2 = numb3 + '_' + numb2;
+				if (numb2 != numb3){
+						if (str != '3_5' && str != '5_3'){
+							if (rand2.indexOf(str) == -1 && rand2.indexOf(str2) == -1) rand2.push(str);
+						} 
+					} 				
+			}
+			var rorder = [];
+			for (var i = 0; i < rand2.length; i++){
+				rorder[i] = [];
+				rorder[i][0] = parseInt(rand2[i].split('_')[0]);
+				rorder[i][1] = parseInt(rand2[i].split('_')[1]);
+			}			
+			var nameBank = ['John', 'Nathan', 'Kevin', 'Philip', 'Sue'];
+			var names = [' ',' ',' ',' ',' '];
+			for (var i = 0; i < 5; i++){
+				names[rand[i]] = nameBank[i];
+			}
+
+
+
 				
-				var labels = ['Nathan', 'Philip', 'John', 'Kevin', 'Sue'];
+				var labels = names;//['Nathan', 'Philip', 'John', 'Kevin', 'Sue'];
+
+
+			ans[0] = [rorder[0][0],rorder[0][1]];
+			statements[0] = names[ans[0][0]-1] + " and "+ names[ans[0][1]-1] + " are friends";
+			
+			
+			//Kevin and Sue are friends;
+			ans[1] = [rorder[1][0],rorder[1][1]];
+			statements[1] = names[ans[1][0]-1] + " and "+ names[ans[1][1]-1] + " are friends";
+					
+			 
+			//Sue and Nathan are not friends; 
+			//Nathan and Kevin are friends; 
+			ans[2] = [rorder[2][0],rorder[2][1]];
+			statements[2] = names[ans[2][0]-1] + " and "+ names[ans[2][1]-1] + " are friends";
+						
+			
+			//Sue and Philip are friends; 
+			
+			ans[3] = [rorder[3][0],rorder[3][1]];
+			statements[3] = names[ans[3][0]-1] + " and "+ names[ans[3][1]-1] + " are friends";		
+			
+			//Kevin and Philip are friends
+			ans[4] = [rorder[4][0],rorder[4][1]];		
+			statements[4] = names[ans[4][0]-1] + " and "+ names[ans[4][1]-1] + " are friends";
+
 				
-				// John and Kevin are friends
+				/*// John and Kevin are friends
 				ans[0] = [3, 4];
 				statements[0] = "John and Kevin are friends";
 				
@@ -42,7 +102,7 @@
 
 				// Kevin and Philip are friends
 				ans[4] = [4, 2];
-				statements[4] = "Kevin and Philip are friends";
+				statements[4] = "Kevin and Philip are friends";*/
 				
 				statements[5] = "Great job!"
 
@@ -342,7 +402,7 @@
 							var x = 1*w_cell*(i+1)+w_cell*1/10;
 							var y = h_cell*9/10;
 							return 'translate(' + x + ',' + y + ')rotate(-45)';
-						}).text(function(){return data.columns[i];});		
+						}).text(function(){return names[i];});		
 
 						canvas.append('text').attr('class', 'noselect')
 
@@ -351,7 +411,7 @@
 								var y = 1*h_cell*(i+1) + 1/2*h_cell;
 								return 'translate(' + x + ',' + y + ')';
 							})
-							.text(function(){return data.columns[i];});								
+							.text(function(){return labels[i];});								
 											
 					}
 
