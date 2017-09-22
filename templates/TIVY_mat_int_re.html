@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+<header>
+   <h2>Matrix Visualization Tutorials</h2>
+</header>
+  
+<!--article>
+  <h1>London</h1>
+  <p>London is the capital city of England. It is the most populous city in the  United Kingdom, with a metropolitan area of over 13 million inhabitants.</p>
+  <p>Standing on the River Thames, London has been a major settlement for two millennia, its history going back to its founding by the Romans, who named it Londinium.</p>
+</article-->
+
+<div id = "viewpanel" >
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<form action="{{ url_for('progress2') }}" method = "post">
+		
+	
+	<div id = "viz1" class='vizContainer' onmousedown="mouseDown()" >
+		<h1 id = "problem">Step: ({{ session['current'] + 1}} out of 5)</h1>
+		<!--svg width="1200" height="600" id = "visualization1"></svg-->
+			<p class = "Title1">Networks</p>
+			<ol >
+				<!--li class = "Title2">The dataset type of networks shows some type of relationship between two or more items (Munzner, 2014).-->
+				<li class = "Title2">According to Merriam-Webster, a network is “a usually informally interconnected group 
+					or association of persons (such as friends or professional colleagues).” A few good examples of a network include:
+					<ul>
+						<li class = "Title3">Class of 2014: individuals who graduated from college in the year 2014</li>
+						<li class = "Title3">A book club: a group of individuals who participate in the book club’s activity</li>
+						<li class = "Title3">American Physical Society: a group of researchers who contribute to physics 
+							research through conference and journal publication in North America. </li>
+						<!--li class = "Title3">An item (<span style="color:green;font-weight:900">vertex</span>) is often called a node.</li>
+						<li class = "Title3">A link (<span style="color:red;font-weight: 900">edge</span>) is a relation between two items.</li-->
+					</ul>
+				</li>
+				<li class = "Title2">The participants of a certain network naturally share some common interest and goals. 
+					It is also often of great interest to analyze how individuals interact with one another within the network. 
+					Imagine a book club with five members, Mary, Sue, Nathan, Kevin, and Philip. Within this book club, 
+					these individuals form more complicated relationships. For example: 
+					<ul>
+						<li class = "Title3">Mary and Nathan are friends.</li>
+						<li class = "Title3">Sue and Philip are friends.</li>
+						<li class = "Title3">Mary and Kevin are friends.</li>
+						<li class = "Title3">Kevin and Philip are friends.</li>
+						<li class = "Title3">Nathan and Sue are friends.</li>
+					</ul>
+				</li>
+				<!--img src="static/data/node_link.png" alt="" width="40%" height = "40%" align = "middle" style="display:block; margin-left: auto; margin-right: auto"-->
+				<!--li class = "Title2">In Facebook, an example of networks with 3 nodes and 2 links:
+					<ul>
+						<li class = "Title3">John and Mary are friends.</li>
+						<li class = "Title3">Mary and Tom are friends.</li>
+						<li class = "Title3"><span style="font-weight:900">Three Nodes:</span> John, Mary, Tom.</li>
+						<li class = "Title3"><span style="font-weight:900">Two Links:</span> John – Mary, Mary – Tom</li>
+					</ul>
+					</li-->
+			</ol>
+			<!--p id = 'logMsg'>Please read the information below before proceed.</p-->
+			<!--button id = "submit" class = 'nav_backward' type = "submit" >Previous</button-->	
+			<button id = "submit" class = 'nav_forward' type = "submit" >Next</button>		
+			<br>
+			
+			
+			<br>
+			<br>
+			<input id = 'clickdata' name='clickdata' value='0' style='display:none'>
+			<input id = 'totaltime' name='totaltime' value='0' style='display:none'>		
+			<br>
+			<!--script src="{{ url_for('static', filename='js/task1_ajax_q.js') }}"></script-->		
+			
+		<!--p id = "statement">Problem Statement</p-->
+		
+		
+		<!--script src="{{ url_for('static', filename='js/task1.js') }}"></script-->
+		
+	</div>
+	<!--div id = "msglog" onmousedown="mouseDown()" >
+		
+		
+	</div-->
+	</form>
+
+  
+  
+</div>
+
+
+
+
+<footer> Teach Information Visualization Yourself (TIVY) 2017
+</footer>
+
+</div>
+<SCRIPT type="text/javascript">
+	//window.history.forward();
+	//function noBack() { window.history.forward(); }
+</SCRIPT>
+</body>
+</html>

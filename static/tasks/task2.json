@@ -1,0 +1,4 @@
+{
+	"Question" : "Now, we will explore what black and white cells in the matrix visualization really mean. Take a look at the first row. Some cells are black and some are white. When the column and the row have a relationship (connected in the node-link diagram on the right), the corresponding cell is black. Now, find the cells (Matrix elements) in the diagram that represent the highlighted connection.",
+	"Options" : ["Option A", "Option B", "Option C"]
+}

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+<header>
+   <h2>Matrix Visualization Tutorials</h2>
+</header>
+  
+<!--article>
+  <h1>London</h1>
+  <p>London is the capital city of England. It is the most populous city in the  United Kingdom, with a metropolitan area of over 13 million inhabitants.</p>
+  <p>Standing on the River Thames, London has been a major settlement for two millennia, its history going back to its founding by the Romans, who named it Londinium.</p>
+</article-->
+
+<div id = "viewpanel" >
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<form action="{{ url_for('progress_mat5') }}" method = "post">
+		
+	
+	<div id = "viz1" class='vizContainer' >
+		<!--h1 id = "problem">Step: ({{ session['current'] + 1}} out of 5)</h1-->
+		<!--svg width="1200" height="600" id = "visualization1"></svg-->
+			<p class = "Title1">Make Common Friends</p>
+			<ul >
+				<!--p class = "Title3"> A cluster is a subset of members within the network that forms close relationships with
+					one another. Unlike a clique, however, clusters do not require each and every member of the subset form
+					a relationship. For instance, look at the subset (red square) of {Joe, Colin, Philip, and Rich} in the network below.
+					While Joe and Colin are friends and Joe and Rich are friends, Rich and Colin are not friends. But these
+					four members form a cluster due to interaction with Joe and Philip. Another subset (blue square) of {Mary, Sue, Nathan, and
+					Kevin} form a cluster for the same reason.
+				</p-->
+				<p class = "Title3">Create connections in the matrix visualization by clicking on blank cells such that Kevin and
+					Colin have two common friends. As you mark the cells, the corresponding links in the node-link diagram will
+					be created.</p>
+			<svg width='1200' height='500' id = 'visualization'></svg>
+			<!--script src = "{{ url_for('static', filename='js/task1.js') }}"></script-->
+			
+			<script>
+				var w_cell = 45;
+				var h_cell = 45;
+				var names2 = ['Row 1', 'Row 2', 'Row 3', 'Row 4', 'Row 5'];
+				var names1 = ['Column 1', 'Column 2', 'Column 3', 'Column 4', 'Column 5'];
+
+				var names_2 = ['Mary', 'Sue', 'Nathan', 'Kevin', 'Philip','Joe','Colin'];
+				var names_1 = names_2;//['Mary', 'Sue', 'Nathan', 'Kevin', 'Philip'];
+				
+				
+				
+			var rand = [];
+			var rand2 = [];	
+			while (rand.length <= names_2.length-1){
+				var numb = Math.round(Math.random()*6);
+				if (rand.indexOf(numb) == -1) rand.push(numb)
+
+			}
+			while (rand2.length <= names_2.length-1){
+				var numb2 = Math.round(Math.random()*6) + 1;
+				var numb3 = Math.round(Math.random()*6) + 1;
+				var str = numb2 + '_' + numb3;
+				var str2 = numb3 + '_' + numb2;
+				if (numb2 != numb3){
+					if (rand2.indexOf(str) == -1 && rand2.indexOf(str2) == -1) rand2.push(str);
+				} 				
+			}
+			var rorder = [];
+			for (var i = 0; i < rand2.length; i++){
+				rorder[i] = [];
+				rorder[i][0] = parseInt(rand2[i].split('_')[0]);
+				rorder[i][1] = parseInt(rand2[i].split('_')[1]);
+			}			
+			var nameBank = names_2;//['John', 'Nathan', 'Kevin', 'Philip', 'Sue'];
+			var names = [' ',' ',' ',' ',' ',' ', ' '];
+			for (var i = 0; i < names_2.length; i++){
+				names[rand[i]] = nameBank[i];
+				if (nameBank[i] == 'Kevin') var kevin = rand[i];
+				if (nameBank[i] == 'Colin') var colin = rand[i]; 
+			}
+			names_2 = names;
+							
+				
+				var data = [[0, 0, 0, 0, 0, 0, 0], 
+							[0, 0, 0, 0, 0, 0, 0], 
+							[0, 0, 0, 0, 0, 0, 0], 
+							[0, 0, 0, 0, 0, 0, 0], 
+							[0, 0, 0, 0, 0, 0, 0],
+							[0, 0, 0, 0, 0, 0, 0],
+							[0, 0, 0, 0, 0, 0, 0]]; 
+				
+				var svg = d3.select('#visualization')
+						.append('g').attr('class', 'canvas').attr('transform', 'translate(600,75)');
+
+				var canvas = d3.select('#visualization');
+
+				var names = names_2;//['Mary', 'Sue', 'Nathan', 'Kevin', 'Philip'];
+				
+				// bounding box for node-link
+				canvas.append('rect')
+					.attr('x', 75).attr('y', 25)
+					.attr('width', 425).attr('height', 450)
+					.attr('style', 'stroke:black; stroke-width:2; opacity: 0.5; fill: none');
+				canvas.append('text')
+					.attr('x', 85).attr('y', 50)
+					.attr('style', 'fill: black; font-weight: 900')
+					.text('Node-link Diagram')
+					 	
+				// draw node-link diagram
+				var r = 135;
+				var mid_x = 280;
+				var mid_y = 260;
+				var dim = names_2.length; 
+				var phi = Math.PI*2/dim;
+				var p_x = [];
+				var p_y = [];
+				for (var i = 0; i < dim; i++){
+					p_x[i] = mid_x + r*Math.cos(phi*i);
+					p_y[i] = mid_y + r*Math.sin(phi*i);
+					canvas.append('circle')
+						.attr('r', 2)
+						.attr('style', 'fill: black')
+						.attr('cx', p_x[i])
+						.attr('cy', p_y[i]);
+				}
+				/*var mat = [[0,0,1,1,0], 
+							[0,0,1,0,1], 
+							[1,1,0,0,0], 
+							[1,0,0,0,1], 
+							[0,1,0,1,0]];*/
+				var mat = data;
+				for (var i = 0; i < mat.length; i++){
+					for (var j = 0; j < mat.length; j++){
+						if (mat[i][j] == 1){
+							canvas.append('line')
+								.attr('id', 'line' + i+'_'+j)
+								.attr('class','links')
+								.attr('x1', p_x[i]).attr('y1', p_y[i])
+								.attr('x2', p_x[j]).attr('y2', p_y[j])
+								.attr('style', function(){
+									//var ind1 = relations[sequence][0];
+									//var ind2 = relations[sequence][1];
+									//if ((i == ind1 && j == ind2) || (i == ind2 && j == ind1)){
+										//return 'stroke: ' + colors[sequence] + '; stroke-width: 4px;';
+									//} else {
+										return 'stroke: black; stroke-width: 4px;';
+									//}
+									
+								});
+						}
+					}
+				}
+			
+
+
+				
+				var rx = 30;
+				var ry = 30;							
+				for (var i = 0; i < dim; i++){
+					p_x[i] = mid_x + r*Math.cos(phi*i);
+					p_y[i] = mid_y + r*Math.sin(phi*i);
+					canvas.append('ellipse').attr('class', 'nodeLabel')
+						.attr('id', 'nodeLabel_'+i)
+						.attr('rx', rx)
+						.attr('ry', ry)
+						.attr('style', function(){
+							var str;
+							if (i == 1){
+								return 'stroke: black; stroke-width: 2;fill: white';
+							}
+							else {
+								return 'stroke: black; stroke-width: 2;fill: white';
+							}
+						})
+						.attr('cx', p_x[i])
+						.attr('cy', p_y[i]);
+				}
+				
+				// highlight nodes 
+				var sty = 'stroke: black; stroke-width: 2;fill: #FFFF66; opacity: 1';
+				var sty2 = 'stroke: black; stroke-width: 2;fill: white; opacity: 1'
+				
+				d3.select('#nodeLabel_' + kevin)
+					.attr('style', sty);
+				d3.select('#nodeLabel_' + colin)
+					.attr('style', sty);
+					
+															
+				for (var i = 0; i < dim; i++){
+					p_x[i] = mid_x + r*Math.cos(phi*i);
+					p_y[i] = mid_y + r*Math.sin(phi*i);
+					canvas.append('text').attr('class', 'nodeLabel')
+						.attr('id', 'nodeLabel' + i)
+						//.attr('r', 2)
+						.attr('style', function(){
+							if (i == 1){
+								return 'fill: black; font-size: 14; text-anchor: middle';
+							} else {
+								return 'fill: black; font-size: 14; text-anchor: middle';
+							}
+							
+						})
+						.attr('x', p_x[i])
+						.attr('y', p_y[i]+12/2)
+						.text(names[i]);
+				}
+					var style = 'stroke: black; stroke-width: 1;fill: #FFFF66; opacity: 1';
+					
+		
+				
+				// bounding box for matrix
+				canvas.append('rect')
+					.attr('x', 550).attr('y', 25)
+					.attr('width', 450).attr('height', 450)
+					.attr('style', 'fill:none; stroke:black; stroke-width:2; opacity:0.5')
+				canvas.append('text')
+					.attr('x', 560).attr('y', 50)
+					.attr('style', 'fill:black; font-weight: 900;')
+					.text('Matrix Visualization');	
+				
+				// draw matrix
+				for (var i = 0; i < dim; i++){
+					for (var j = 0; j < dim; j++){
+						svg.append('rect').attr('class', 'cell')
+							.attr('id', 'cell(' + i + ',' + j +')')
+							.attr('width', w_cell).attr('height', h_cell)
+							.attr('x', w_cell*(i+1))
+							.attr('y', h_cell*(j+1))
+							.attr('style', function(){
+								var str, str2;
+								if (data[i][j] == '1'){
+									str = 'black';//'gray';
+									str2 = 'black';
+								}
+								else {
+									str = 'white';
+									str2 = 'black';
+								} 
+									
+								return 'stroke: ' + str2 + '; stroke-width: 2; opacity: 0.5; fill:' + str;
+							});
+							
+						// highlight column labels	
+						if (i == kevin || i == colin)		
+						svg.append('rect')
+							.attr('transform', function(){
+							var x = 1*w_cell*(i+1)-w_cell*1/10;
+							var y = h_cell*7/10;
+							return 'translate(' + x + ',' + y + ')rotate(-45)';
+						})
+							.attr('width', 40)
+							.attr('height', 13)
+							.attr('style', 'fill: #FFFF66; opacity: 0.5');							
+							
+						svg.append('text').attr('class', 'noselect')
+							//.attr('id', 'columnLabelText' + i)
+						//.attr('x', w_cell*(i+1)+w_cell*1/10).attr('y', h_cell*(9)/10)
+							.attr('transform', function(){
+							var x = 1*w_cell*(i+1)+w_cell*1/10;
+							var y = h_cell*9/10;
+							return 'translate(' + x + ',' + y + ')rotate(-45)';
+						}).text(function(){return names_2[i];});		
+
+						// highlight row labels
+						if (i == kevin || i == colin)	
+						svg.append('rect')
+							.attr('transform', function(){
+								var x = w_cell*0/10-20;
+								var y = 1*h_cell*(i+1) + 1/2*h_cell - 1/5*h_cell;
+								return 'translate(' + x + ',' + y + ')';
+							})
+							.attr('width', 40)
+							.attr('height', 13)
+							.attr('style', 'fill: #FFFF66; opacity: 0.5');
+							
+							
+							
+						svg.append('text').attr('class', 'noselect')
+							//.attr('id', 'rowLabelText' + i)
+						//.attr('x', w_cell*(i+1)+w_cell*1/10).attr('y', h_cell*(9)/10)
+							.attr('transform', function(){
+								var x = w_cell*0/10-20;
+								var y = 1*h_cell*(i+1) + 1/2*h_cell;
+								return 'translate(' + x + ',' + y + ')';
+							})
+							.text(function(){return names_2[i];});								
+											
+						}
+
+					}
+			
+
+	
+				
+				var find_node = 0;
+				var find_cell = [];
+				var find_link = 0;
+				var com_f = -1;	
+				var prev_r;
+				var prev_c;
+					
+				var t_3_x = 575;
+				var t_3_y = 75;		
+				var text_3 = d3.select('#visualization').append('text')
+					.attr('class', 'noselect')
+					.attr('id', 'warning')
+					.attr('x', t_3_x).attr('y', t_3_y)
+					.attr('style', 'font-weight: 900; fill: red;')
+					.text(' ');													
+				d3.selectAll('.cell').on('mousedown', function(){
+					var r_1 = parseInt(this.getAttribute('id').split(',')[0].split('(')[1]);
+					var c_1 = parseInt(this.getAttribute('id').split(',')[1].split(')')[0]);
+					var r_x = this.getAttribute('x');
+					var r_y = this.getAttribute('y');
+					
+					var c_x = p_x[r_1];
+					var c_y = p_y[r_1];
+					var c_x2 = p_x[c_1];
+					var c_y2 = p_y[c_1];
+					
+					if (r_1 == kevin || r_1 == colin || c_1 == kevin || c_1 == colin){
+						if (r_1 == kevin && c_1 == colin || r_1 == colin && c_1 == kevin){
+							var text = document.getElementById('warning').childNodes;
+							document.getElementById('warning').removeChild(text[0]);
+							d3.select('#warning').remove();									
+							var text_1 = d3.select('#visualization').append('text')
+								.attr('class', 'noselect')
+								.attr('id', 'warning')
+								.attr('x', t_3_x).attr('y', t_3_y)
+								.attr('style', 'font-weight: 900; fill: red;')
+								.text('Kevin and Colin are not friends.');						
+						} else {
+							if (find_link == 1){
+								
+								if (r_1 == com_f || c_1 == com_f)
+								{
+									find_link = 0;
+									var theta = Math.atan((c_y2-c_y)/(c_x2-c_x));
+									var d_x = Math.abs(30*Math.cos(theta));
+									var d_y = Math.abs(30*Math.sin(theta));
+									
+									var x_1, x_2, y_1, y2;
+									if (c_x > c_x2){
+										x_1 = c_x2 + d_x;
+										x_2 = c_x - d_x;
+									 	
+									 	if (c_y > c_y2){
+									 		y_1 = c_y2 + d_y;
+									 		y_2 = c_y - d_y;
+									 	} else {
+									 		y_1 = c_y2 - d_y;
+									 		y_2 = c_y + d_y;									 		
+									 	}
+									 	
+									} else {
+										x_1 = c_x + d_x;
+										x_2 = c_x2 - d_x; 
+									 	if (c_y > c_y2){
+									 		y_1 = c_y - d_y;
+									 		y_2 = c_y2 + d_y;
+									 	} else {
+									 		y_1 = c_y + d_y;
+									 		y_2 = c_y2 - d_y;									 		
+									 	}																				
+									}
+
+								document.getElementById('cell(' + r_1 + ',' + c_1 +')')
+								.setAttribute('style', 'fill:black; stroke: black; stroke-width: 2; opacity: 0.5')
+								document.getElementById('cell(' + c_1 + ',' + r_1 +')')
+								.setAttribute('style', 'fill:black; stroke: black; stroke-width: 2; opacity: 0.5')
+								
+								
+								d3.select(document.getElementById('cell(' + r_1 + ',' + c_1 +')'))
+									.on('mousedown', null);
+								d3.select(document.getElementById('cell(' + r_1 + ',' + c_1 +')'))
+									.on('mousmove', null);
+								d3.select(document.getElementById('cell(' + c_1 + ',' + r_1 +')'))
+									.on('mousedown', null);
+								d3.select(document.getElementById('cell(' + c_1 + ',' + r_1 +')'))
+									.on('mousmove', null);
+																										
+								find_node[find_node] = [];
+								find_cell[find_node].push('cell(' + r_1 + ',' + c_1 +')');
+								find_cell[find_node].push('cell(' + c_1 + ',' + r_1 +')');
+												
+									canvas.append('line')
+										.attr('class', 'newlink' + find_node)
+										.attr('x1', x_1).attr('y1', y_1)
+										.attr('x2', x_2).attr('y2', y_2)
+										.attr('style', 'stroke: black; stroke-width: 2');	
+						
+									var text = document.getElementById('warning').childNodes;
+									document.getElementById('warning').removeChild(text[0]);
+									d3.select('#warning').remove();									
+									var text_1 = d3.select('#visualization').append('text')
+										.attr('class', 'noselect')
+										.attr('id', 'warning')
+										.attr('x', t_3_x).attr('y', t_3_y)
+										.attr('style', 'font-weight: 900; fill: red;')
+										.text(' ');	
+								
+															
+								
+								
+										com_f = -1;		
+									if (find_node == 0){
+										d3.selectAll('.newlink0')
+											.attr('style', 'stroke: red; stroke-width: 2');
+										for (var i = 0; i < 4; i ++){
+										var cell = find_cell[find_node][i];	
+										document.getElementById(cell)
+											.setAttribute('style', 'fill:red; stroke: black; stroke-width: 2; opacity: 0.5');
+										
+										d3.select(document.getElementById(cell)).on('mousemove', null);
+										d3.select(document.getElementById(cell)).on('mousedown', null);												
+											
+										}
+									
+																			
+										find_node++;
+										
+									} else {
+										d3.selectAll('.newlink1')
+											.attr('style', 'stroke: blue; stroke-width: 2');
+										var cell = find_cell[find_node][0];	
+										document.getElementById(cell)
+											.setAttribute('style', 'fill:blue; stroke: black; stroke-width: 2; opacity: 0.5');
+											
+										var cell = find_cell[find_node][1];	
+										document.getElementById(cell)
+											.setAttribute('style', 'fill:blue; stroke: black; stroke-width: 2; opacity: 0.5');	
+
+										var cell = find_cell[find_node][2];	
+										document.getElementById(cell)
+											.setAttribute('style', 'fill:blue; stroke: black; stroke-width: 2; opacity: 0.5');
+											
+										var cell = find_cell[find_node][3];	
+										document.getElementById(cell)
+											.setAttribute('style', 'fill:blue; stroke: black; stroke-width: 2; opacity: 0.5');											
+																												
+										d3.selectAll('.cell').on('mousedown', null);
+										d3.selectAll('.cell').on('mousemove', null);
+																				
+									}																						
+								} else {
+									var text = document.getElementById('warning').childNodes;
+									document.getElementById('warning').removeChild(text[0]);
+									d3.select('#warning').remove();									
+									var text_1 = d3.select('#visualization').append('text')
+										.attr('class', 'noselect')
+										.attr('id', 'warning')
+										.attr('x', t_3_x).attr('y', t_3_y)
+										.attr('style', 'font-weight: 900; fill: red;')
+										.text('Try to connect '+names[com_f]);										
+								}
+								var asdfsadfs = 0;
+
+							} else {
+								find_link++;
+								if (r_1 == kevin || c_1 == kevin){
+									if (r_1 == kevin)
+									com_f = c_1;
+									else com_f = r_1;
+								} else if (r_1 == colin || c_1 == colin){
+									if (r_1 == colin){
+										com_f = c_1;
+									} else com_f = r_1;
+								}
+								
+								prev_r = r_1;
+								prev_c = c_1;
+									var theta = Math.atan((c_y2-c_y)/(c_x2-c_x));
+									var d_x = Math.abs(30*Math.cos(theta));
+									var d_y = Math.abs(30*Math.sin(theta));
+									
+									var x_1, x_2, y_1, y2;
+									if (c_x > c_x2){
+										x_1 = c_x2 + d_x;
+										x_2 = c_x - d_x;
+									 	
+									 	if (c_y > c_y2){
+									 		y_1 = c_y2 + d_y;
+									 		y_2 = c_y - d_y;
+									 	} else {
+									 		y_1 = c_y2 - d_y;
+									 		y_2 = c_y + d_y;									 		
+									 	}
+									 	
+									} else {
+										x_1 = c_x + d_x;
+										x_2 = c_x2 - d_x; 
+									 	if (c_y > c_y2){
+									 		y_1 = c_y - d_y;
+									 		y_2 = c_y2 + d_y;
+									 	} else {
+									 		y_1 = c_y + d_y;
+									 		y_2 = c_y2 - d_y;									 		
+									 	}																				
+									}
+						
+						
+						document.getElementById('cell(' + r_1 + ',' + c_1 +')')
+						.setAttribute('style', 'fill:black; stroke: black; stroke-width: 2; opacity: 0.5')
+						document.getElementById('cell(' + c_1 + ',' + r_1 +')')
+						.setAttribute('style', 'fill:black; stroke: black; stroke-width: 2; opacity: 0.5')
+								find_cell[find_node] = [];
+								find_cell[find_node].push('cell(' + r_1 + ',' + c_1 +')');
+								find_cell[find_node].push('cell(' + c_1 + ',' + r_1 +')');
+
+								d3.select(document.getElementById('cell(' + r_1 + ',' + c_1 +')'))
+									.on('mousedown', null);
+								d3.select(document.getElementById('cell(' + r_1 + ',' + c_1 +')'))
+									.on('mousmove', null);
+								d3.select(document.getElementById('cell(' + c_1 + ',' + r_1 +')'))
+									.on('mousedown', null);
+								d3.select(document.getElementById('cell(' + c_1 + ',' + r_1 +')'))
+									.on('mousmove', null);
+												
+							canvas.append('line')
+								.attr('class', 'newlink' + find_node)
+								.attr('x1', x_1).attr('y1', y_1)
+								.attr('x2', x_2).attr('y2', y_2)
+								.attr('style', 'stroke: black; stroke-width: 2');	
+						
+							var text = document.getElementById('warning').childNodes;
+							document.getElementById('warning').removeChild(text[0]);
+							d3.select('#warning').remove();									
+							var text_1 = d3.select('#visualization').append('text')
+								.attr('class', 'noselect')
+								.attr('id', 'warning')
+								.attr('x', t_3_x).attr('y', t_3_y)
+								.attr('style', 'font-weight: 900; fill: red;')
+								.text(' ');	
+								}	
+							}				
+						}
+					else {
+						var text = document.getElementById('warning').childNodes;
+						document.getElementById('warning').removeChild(text[0]);
+						d3.select('#warning').remove();									
+						var text_1 = d3.select('#visualization').append('text')
+							.attr('class', 'noselect')
+							.attr('id', 'warning')
+							.attr('x', t_3_x).attr('y', t_3_y)
+							.attr('style', 'font-weight: 900; fill: red;')
+							.text('The selected relationship does not involve Kevin or Colin.');						
+					}						
+					
+				});
+				d3.selectAll('.cell').on('mousemove', function(){
+					var r_1 = parseInt(this.getAttribute('id').split(',')[0].split('(')[1]);
+					var c_1 = parseInt(this.getAttribute('id').split(',')[1].split(')')[0]);
+					var r_x = this.getAttribute('x');
+					var r_y = this.getAttribute('y');
+
+					if (r_1 != c_1){
+						var style = this.getAttribute('style').split(':');
+						var color = style[style.length-1];
+						//this.setAttribute('style', 'stroke: red; stroke-width:5; fill:' + color);
+
+						svg.append('rect')
+							.attr('class', 'marker')
+							.attr('x', r_x).attr('y', r_y)
+							.attr('width', h_cell).attr('height', h_cell)
+							.attr('style', 'stroke: red; stroke-width:5; fill: none');
+						svg.append('rect')
+							.attr('class', 'marker')
+							.attr('x', r_y).attr('y', r_x)
+							.attr('width', h_cell).attr('height', h_cell)
+							.attr('style', 'stroke: red; stroke-width:5; fill: none');	
+					
+						var duplicate = document.getElementById('cell(' + c_1 + ',' + r_1 + ')');
+						//duplicate.setAttribute('style', 'stroke: red; stroke-width:5; fill:' + color);
+					}
+					d3.select(this).on('mouseout', function(){
+					if (r_1 != c_1){
+						//var style = this.getAttribute('style').split(':');
+						//var color = style[style.length-1];
+						d3.selectAll('.marker').remove();
+
+					}						
+					});	
+										
+				});	
+			</script>
+
+				
+				<!--li class = "Title2">The highlighted cell in the chart belongs to both Row 3 and Column 2. 
+					This cell can thus be represented as (Row 3, Column 2).</li-->
+					
+			<p class="Title3">Finding clusters in complex unordered matrix visualizatons by hand reordering is
+				often a tedious task and may require an algorithm that utilizes rigorous optimization scheme. 
+				The ordered matrix visualization above shows two closely knit subsets in this network.</p>		
+					
+					
+					
+			</ul>
+			
+
+			
+			
+			<!--p id = 'logMsg'>Please read the information below before proceed.</p-->
+			<!--button id = "submit" class = 'nav_backward' type = "submit" >Previous</button-->	
+			<button id = "submit" class = 'nav_forward' type = "submit" >Next</button>		
+			<br>
+			
+			
+			<br>
+			<br>
+			<input id = 'clickdata' name='clickdata' value='0' style='display:none'>
+			<input id = 'totaltime' name='totaltime' value='0' style='display:none'>		
+			<br>
+			<!--script src="{{ url_for('static', filename='js/task1_ajax_q.js') }}"></script-->		
+			
+		<!--p id = "statement">Problem Statement</p-->
+		
+		
+		<!--script src="{{ url_for('static', filename='js/task1.js') }}"></script-->
+		
+	</div>
+	<!--div id = "msglog" onmousedown="mouseDown()" >
+		
+		
+	</div-->
+	</form>
+
+  
+  
+</div>
+
+
+
+
+<footer> Teach Information Visualization Yourself (TIVY) 2017
+</footer>
+
+</div>
+<SCRIPT type="text/javascript">
+	//window.history.forward();
+	//function noBack() { window.history.forward(); }
+</SCRIPT>
+</body>
+</html>

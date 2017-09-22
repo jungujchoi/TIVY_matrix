@@ -1,0 +1,4 @@
+{
+	"Question" : "On this page, we are going to explain the basics of a matrix visualization. The matrix visualization shows relationships among nodes just like in the node-link diagram on the right. It is a table that has rows and columns that represent the nodes. Click on the row and column that correspond to the highlighted node.",
+	"Options" : ["Option1", "Option2", "Option3", "Option4"]
+}
