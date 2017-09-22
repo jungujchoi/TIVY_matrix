@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+<header>
+   <h2>Matrix Visualization Tutorials</h2>
+</header>
+  
+<!--article>
+  <h1>London</h1>
+  <p>London is the capital city of England. It is the most populous city in the  United Kingdom, with a metropolitan area of over 13 million inhabitants.</p>
+  <p>Standing on the River Thames, London has been a major settlement for two millennia, its history going back to its founding by the Romans, who named it Londinium.</p>
+</article-->
+
+<div id = "viewpanel" >
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<form action="{{ url_for('progress4') }}" method = "post">
+		
+	
+	<div id = "viz1" class='vizContainer' onmousedown="mouseDown()" >
+		<!--h1 id = "problem">Step: ({{ session['current'] + 1}} out of 5)</h1-->
+		<!--svg width="1200" height="600" id = "visualization1"></svg-->
+			<p class = "Title1">Relationships among Network Members</p>
+			<ol >
+
+				<p class = "Title3">As shown in Fig. 1, a node-link diagram (left) uses 'links' to represent
+					relationships between nodes while a matrix visualization (right) uses marked 'cells' belonging to
+					the rows/columns of the respective network members to represent the relationships. The
+					highlighted node ("Sue" in blue) in the node-link diagram corresponds to the blue labels (Sue) in the
+					matrix visualization. The cells belonging to Sue's row/column show the relationships Sue has
+					with all the other members. In the node-link diagram, Sue has two links with other members in the
+					network. This is clearly reflected in the matrix visualization in that Sue's row/column contains two cells
+					that are marked dark. 
+					
+   
+				</p>
+					 <div id='visualization1'>
+
+					<center>
+						<img src="{{ url_for('static', filename='data/node_and_mat.png')}}" align="middle">
+					</center>			
+					 </div>
+
+					<p class="Title3" style="text-align:center">Fig 1. A network represented in a node-link diagram (left)
+						and a matrix visualization (right). The network member "Sue" in the node-link diagram 
+						and her row/column in the matrix visualization are highlighted in blue.</p>
+					<p class="Title3">In addition, let's look at two network members simultaneously (i.e. "Philip" and "Sue"). 
+						Their nodes in the node link diagram are highlighted blue for Sue and orange for Philip in Fig 2. Their
+						respective rows/columns are also shown in the matrix visualization.</p>
+					 <div id='visualization2'>
+
+					<center>
+						<img src="{{ url_for('static', filename='data/node_and_mat2.png')}}" align="middle">
+					</center>
+					</div>			
+			<p class="Title3" style="text-align:center">Fig 2. The node-link diagram (left) and the matrix visualization (right)
+				of the same network with two members, Sue and Philip, highlighted in blue and orange, respectively.</p>
+													
+			<p class="Title3">Pay special attention to the two cells in the matrix visualization: one that belongs to both Sue's 
+				row and Philip's column and	the other that belongs to both Philip's row and Sue's column. These two cells 
+				highlighted in both blue and orange dahshed-strokes show the relationship between Sue and Philip. Since these
+				cells are marked dark, one can understand that these two members are friends.</p>			
+						
+			</ol>
+	
+			<button id = "submit" class = 'nav_forward' type = "submit" >Next</button>		
+			<br>
+			
+			
+			<br>
+			<br>
+			<input id = 'clickdata' name='clickdata' value='0' style='display:none'>
+			<input id = 'totaltime' name='totaltime' value='0' style='display:none'>		
+			<br>
+
+		
+	</div>
+
+	</form>
+
+  
+  
+</div>
+
+
+
+
+<footer> Teach Information Visualization Yourself (TIVY) 2017
+</footer>
+
+</div>
+<SCRIPT type="text/javascript">
+	//window.history.forward();
+	//function noBack() { window.history.forward(); }
+</SCRIPT>
+</body>
+</html>

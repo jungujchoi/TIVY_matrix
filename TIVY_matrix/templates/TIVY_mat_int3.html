@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+<header>
+   <h2>Matrix Visualization Tutorials</h2>
+</header>
+  
+
+<div id = "viewpanel" >
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<form action="{{ url_for('progress_mat2') }}" method = "post">
+		
+	
+	<div id = "viz1" class='vizContainer' >
+		<!--h1 id = "problem">Step: ({{ session['current'] + 1}} out of 5)</h1-->
+		<!--svg width="1200" height="600" id = "visualization1"></svg-->
+			<!--p class = "Title1">Networks</p-->
+			<p class = "Title1">Reordering Matrix rows and columns.</p>
+			<ol>
+
+				<p class="Title3">Revisiting the previous network example with the subset {"Kevin", "Philip", and "Colin"}, you can see
+					the green boxes in the matrix visualization represent the relationships within the subset members. It would be
+					convenient to explore the relationships within a subset if the green boxes are near one another and would be
+					much easier if there was only one green box. You'd get only one green box if the rows/columns are next to one
+					another. Therefore, it is
+					often useful to reorder the rows and columns of the matrix such that these nodes are next to 
+					one another. In the matrix visualization, "Kevin" (4th row/column) and "Philip" (5th row/column) 
+					are already next to one another but "Colin" (7th row/column) is not next to either "Kevin" or
+					"Philip."</p>
+				<div id="visualization1">
+					<!--svg width="1200" height="450" id = "visualization"></svg-->
+					<center>
+					<img src="{{ url_for('static', filename='data/reorder1.png')}}" align="middle">
+					</center>
+
+			</div>
+				<p class='Title3' style="text-align:center">Fig. 1. Node-link diagram (left) and matrix visualization (right)
+				of a network consisting eight people. The highlighted nodes and rows/columns in the node-link diagram and 
+				in the matrix visualization, respectively, are a subset of the network members of interest.</p> 
+				
+				<p class="Title3"> There are a few ways to rearrange the rows and columns so that the three
+					persons are next to one another. One way is to swap Colin's row/column with Joe's row/column. In the
+					image below, the left matrix visualization shows Joe's row/column in red and Colimn's row/column in
+					yellow highlight. When these two are swapped (right) Kevin, Philip, and Colin are next to one another,
+					resulting in a subset of the matrix (green box) that represents relationships among the three members. 
+				</p>
+					 
+			
+			
+			<div>
+			<!--svg width='1200' height='450' id = 'visualization2'></svg-->
+			<center><img src="{{ url_for('static', filename='data/reorder2.png')}}" align="middle">
+			</center>
+			
+			</div>
+			<p class='Title3' style="text-align:center">Fig. 2. (left) The 6th and 7th rows/columns are to be swapped
+				to have "Kevin", "Philip", and "Colin" next to one another.</p> 			
+			
+			</ol>
+			
+			<button id = "submit" class = 'nav_forward' type = "submit" >Next</button>		
+			<br>
+			
+			
+			<br>
+			<br>
+			<input id = 'clickdata' name='clickdata' value='0' style='display:none'>
+			<input id = 'totaltime' name='totaltime' value='0' style='display:none'>		
+			<br>
+
+		
+	</div>
+
+	</form>
+
+  
+  
+</div>
+
+
+
+
+<footer> Teach Information Visualization Yourself (TIVY) 2017
+</footer>
+
+</div>
+<SCRIPT type="text/javascript">
+	//window.history.forward();
+	//function noBack() { window.history.forward(); }
+</SCRIPT>
+</body>
+</html>

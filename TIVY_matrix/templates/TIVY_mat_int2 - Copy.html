@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+<header>
+   <h2>Matrix Visualization Tutorials</h2>
+</header>
+  
+<!--article>
+  <h1>London</h1>
+  <p>London is the capital city of England. It is the most populous city in the  United Kingdom, with a metropolitan area of over 13 million inhabitants.</p>
+  <p>Standing on the River Thames, London has been a major settlement for two millennia, its history going back to its founding by the Romans, who named it Londinium.</p>
+</article-->
+
+<div id = "viewpanel" >
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<form action="{{ url_for('progress_mat') }}" method = "post">
+		
+	
+	<div id = "viz1" class='vizContainer' onmousedown="mouseDown()" >
+		<!--h1 id = "problem">Step: ({{ session['current'] + 1}} out of 5)</h1-->
+		<!--svg width="1200" height="600" id = "visualization1"></svg-->
+			<p class = "Title1">Relationships among Network Members</p>
+			<ol >
+
+				<p class = "Title3">As shown in Fig. 1, a node-link diagram (left) uses 'links' to represent
+					relationships between nodes while a matrix visualization (right) uses marked 'cells' belonging to
+					the rows/columns of the respective network members to represent the relationships. The
+					highlighted node ("Sue" in blue) in the node-link diagram corresponds to the blue labels (Sue) in the
+					matrix visualization. The cells belonging to Sue's row/column show the relationships Sue has
+					with all the other members. In the node-link diagram, Sue has two links with other members in the
+					network. This is clearly reflected in the matrix visualization in that Sue's row/column contains two cells
+					that are marked dark. 
+					
+   
+				</p>
+					 <div id='visualization1'>
+					 	<svg width="1200" height="310" id = "visualization"></svg>
+			<script>
+				var w_cell = 45;
+				var h_cell = 45;
+				var names2 = ['Row 1', 'Row 2', 'Row 3', 'Row 4', 'Row 5'];
+				var names1 = ['Column 1', 'Column 2', 'Column 3', 'Column 4', 'Column 5'];
+
+				var names_2 = ['Mary', 'Sue', 'Nathan', 'Kevin', 'Philip'];
+				var names_1 = ['Mary', 'Sue', 'Nathan', 'Kevin', 'Philip'];
+				
+				var data = [[0, 0, 1, 1, 1], 
+							[0, 0, 1, 0, 1], 
+							[1, 1, 0, 1, 0], 
+							[1, 0, 1, 0, 1], 
+							[1, 1, 0, 1, 0]]; 
+				
+				var svg = d3.select('#visualization')
+						.append('g').attr('class', 'canvas').attr('transform', 'translate(600,20)');
+
+				var canvas = d3.select('#visualization');
+
+				var names = ['Mary', 'Sue', 'Nathan', 'Kevin', 'Philip'];
+					 	
+				// draw node-link diagram
+				var r = 100;
+				var mid_x = 350;
+				var mid_y = 200-40;
+				var dim = 5; 
+				var phi = Math.PI*2/dim;
+				var p_x = [];
+				var p_y = [];
+				for (var i = 0; i < dim; i++){
+					p_x[i] = mid_x + r*Math.cos(phi*i);
+					p_y[i] = mid_y + r*Math.sin(phi*i);
+					canvas.append('circle')
+						.attr('r', 2)
+						.attr('style', 'fill: black')
+						.attr('cx', p_x[i])
+						.attr('cy', p_y[i]);
+				}
+				/*var mat = [[0,0,1,1,0], 
+							[0,0,1,0,1], 
+							[1,1,0,1,0], 
+							[1,0,1,0,1], 
+							[0,1,0,1,0]];*/
+				var mat = data;
+				for (var i = 0; i < mat.length; i++){
+					for (var j = i+1; j < mat.length; j++){
+						if (mat[i][j] == 1){
+							canvas.append('line')
+								.attr('id', 'line' + i+'_'+j)
+								.attr('class','links')
+								.attr('x1', p_x[i]).attr('y1', p_y[i])
+								.attr('x2', p_x[j]).attr('y2', p_y[j])
+								.attr('style', function(){
+									//var ind1 = relations[sequence][0];
+									//var ind2 = relations[sequence][1];
+									//if ((i == ind1 && j == ind2) || (i == ind2 && j == ind1)){
+										//return 'stroke: ' + colors[sequence] + '; stroke-width: 4px;';
+									//} else {
+										return 'stroke: black; stroke-width: 4px;';
+									//}
+									
+								});
+						}
+					}
+				}
+				var rx = 35;
+				var ry = 35;							
+				for (var i = 0; i < dim; i++){
+					p_x[i] = mid_x + r*Math.cos(phi*i);
+					p_y[i] = mid_y + r*Math.sin(phi*i);
+					canvas.append('ellipse').attr('class', 'nodeLabel')
+						.attr('id', 'nodeLabel_'+i)
+						.attr('rx', rx)
+						.attr('ry', ry)
+						.attr('style', function(){
+							var str;
+							if (i == 1){
+								return 'stroke: blue; stroke-width: 2;fill: white';
+							//} else if (i == 4){
+							//	return 'stroke: orange; stroke-width: 2;fill: white';
+							}
+							else {
+								return 'stroke: black; stroke-width: 2;fill: white';
+							}
+						})
+						.attr('cx', p_x[i])
+						.attr('cy', p_y[i]);
+				}
+				for (var i = 0; i < dim; i++){
+					p_x[i] = mid_x + r*Math.cos(phi*i);
+					p_y[i] = mid_y + r*Math.sin(phi*i);
+					canvas.append('text').attr('class', 'nodeLabel')
+						.attr('id', 'nodeLabel' + i)
+						//.attr('r', 2)
+						.attr('style', function(){
+							if (i == 1){
+								return 'fill: blue; font-weight: 900; font-size: 14; text-anchor: middle';
+							//} else if (i == 4){
+							//	return 'fill: orange; font-weight: 900; font-size: 14; text-anchor: middle';
+							} else {
+								return 'fill: black; font-size: 14; text-anchor: middle';
+							}
+							
+						})
+						.attr('x', p_x[i])
+						.attr('y', p_y[i]+12/2)
+						.text(names[i]);
+				}
+
+
+				for (var i = 0; i < names1.length; i++){
+					for (var j = 0; j < names1.length; j++){
+						svg.append('rect').attr('class', 'cell')
+							.attr('id', 'cell(' + i + ',' + j +')')
+							.attr('width', w_cell).attr('height', h_cell)
+							.attr('x', w_cell*(i+1))
+							.attr('y', h_cell*(j+1))
+							.attr('style', function(){
+								var str, str2;
+								if (data[i][j] == '1'){
+									str = 'gray';
+									str2 = 'black';
+								}
+								else {
+									str = 'white';
+									str2 = 'black';
+								} 
+									
+								return 'stroke: ' + str2 + '; stroke-width: 2; opacity: 1; fill:' + str;
+							});
+						svg.append('text').attr('class', 'noselect')
+							.attr('style', function(){
+								if (i == 1){
+									return 'font-weight:900;fill:blue';
+								//} else if (i==4){
+								//	return 'font-weight:900;fill:orange';
+									
+								} else {
+									return 'fill:black';
+								}
+							})
+							//.attr('id', 'columnLabelText' + i)
+						//.attr('x', w_cell*(i+1)+w_cell*1/10).attr('y', h_cell*(9)/10)
+							.attr('transform', function(){
+							var x = 1*w_cell*(i+1)+w_cell*5/10;
+							var y = h_cell*9/10;
+							return 'translate(' + x + ',' + y + ')rotate(-45)';
+						}).text(function(){return names_1[i];});		
+
+						svg.append('text').attr('class', 'noselect')
+							.attr('style', function(){
+								if (i == 1){
+									return 'font-weight:900;fill:blue';
+								//} else if (i==4){
+								//	return 'font-weight:900;fill:orange';
+									
+								} else {
+									return 'fill:black';
+								}
+							})						
+							//.attr('id', 'rowLabelText' + i)
+						//.attr('x', w_cell*(i+1)+w_cell*1/10).attr('y', h_cell*(9)/10)
+							.attr('transform', function(){
+								var x = w_cell*0/10-20;
+								var y = 1*h_cell*(i+1) + 1/2*h_cell;
+								return 'translate(' + x + ',' + y + ')';
+							})
+							.text(function(){return names_2[i];});								
+											
+						}
+					}
+					var thick = 4;
+					var thick2 = 4-1;
+					// high-lighting cells
+					for (var i = 0; i < names1.length; i++){
+
+						// blue
+						//if (i == 4){
+
+						//} else {
+						svg.append('rect').attr('class', 'dashed-blue')
+							.attr('x', w_cell + i*w_cell+thick2).attr('y',  2 * h_cell+thick2)
+							.attr('width', w_cell-thick2*2).attr('height', h_cell-thick2*2)
+							.attr('style', 'stroke: blue; stroke-width: ' + thick + ';  fill:none');
+						svg.append('rect').attr('class', 'dashed-blue')
+							.attr('y', w_cell + i*w_cell+thick2).attr('x',  2 * w_cell+thick2)
+							.attr('width', w_cell-thick2*2).attr('height', h_cell-thick2*2)
+							.attr('style', 'stroke: blue; stroke-width:' + thick +';  fill:none');							
+						//}
+							
+					}
+					//var fig1 = 'Fig 1. A node in the node-link diagram (left) corresponds to';
+					//canvas.append('text')
+					//	.attr('x', 240).attr('y', 340)
+				//		.attr('style', 'fill: black')
+				//		.text(fig1)
+						
+					/*for (var i = 0; i < names1.length; i++){
+						// orange
+						//if (i != 1){
+						svg.append('rect').attr('class', 'dashed-orange')
+							.attr('x', w_cell + i*w_cell + thick2).attr('y', names1.length * h_cell+ thick2)
+							.attr('width', w_cell -2*thick2).attr('height', h_cell -2*thick2)
+							.attr('style', 'stroke: orange; stroke-width: ' + thick + ';  fill:none');
+						svg.append('rect').attr('class', 'dashed-orange')
+							.attr('y', w_cell + i*w_cell+ thick2).attr('x',  names1.length * h_cell+ thick2)
+							.attr('width', w_cell -2*thick2).attr('height', h_cell -2*thick2)
+							.attr('style', 'stroke: orange; stroke-width: ' + thick + '; fill:none');
+
+					}					
+						svg.append('rect').attr('class', 'dashed-blue')
+							.attr('x', w_cell + 4*w_cell+ thick2).attr('y',  2 * h_cell+ thick2)
+							.attr('width', w_cell - 2*thick2 ).attr('height', h_cell- 2*thick2)
+							.attr('style', 'stroke: blue; stroke-width: ' + thick + '; stroke-dasharray: 5 3; fill:none');
+						svg.append('rect').attr('class', 'dashed-blue')
+							.attr('y', w_cell + 4*w_cell+ thick2).attr('x', 2 * w_cell+ thick2)
+							.attr('width', w_cell - 2*thick2).attr('height', h_cell - 2*thick2)
+							.attr('style', 'stroke: blue; stroke-width:' + thick +'; stroke-dasharray: 5 3; fill:none');
+					*/
+					
+					
+					
+					
+					
+			</script>
+					 </div>
+					<!--ul>
+						<li class = "Title3">John and Mary are friends.</li>
+						<li class = "Title3">Mary and Tom are friends.</li>
+						<li class = "Title3"><span style="font-weight:900">Three Nodes:</span> John, Mary, and Tom.</li>
+						<li class = "Title3"><span style="font-weight:900">Two Links:</span> John – Mary and Mary – Tom</li>
+					</ul-->
+
+					<p class="Title3" style="text-align:center">Fig 1. A network represented in a node-link diagram (left)
+						and a matrix visualization (right). The network member "Sue" in the node-link diagram 
+						and her row/column in the matrix visualization are highlighted in blue.</p>
+					<p class="Title3">In addition, let's look at two network members simultaneously (i.e. "Philip" and "Sue"). 
+						Their nodes in the node link diagram are highlighted blue for Sue and orange for Philip in Fig 2. Their
+						respective rows/columns are also shown in the matrix visualization.</p>
+					 <!--div id='visualization1'-->
+					 	<svg width="1200" height="310" id = "visualization2"></svg>
+			<script>
+			
+				/////////////////////////////	
+				var w_cell = 45;
+				var h_cell = 45;
+				var names2 = ['Row 1', 'Row 2', 'Row 3', 'Row 4', 'Row 5'];
+				var names1 = ['Column 1', 'Column 2', 'Column 3', 'Column 4', 'Column 5'];
+
+				var names_2 = ['Mary', 'Sue', 'Nathan', 'Kevin', 'Philip'];
+				var names_1 = ['Mary', 'Sue', 'Nathan', 'Kevin', 'Philip'];
+				
+				var data = [[0, 0, 1, 1, 1], 
+							[0, 0, 1, 0, 1], 
+							[1, 1, 0, 1, 0], 
+							[1, 0, 1, 0, 1], 
+							[1, 1, 0, 1, 0]]; 
+				
+				var svg = d3.select('#visualization2')
+						.append('g').attr('class', 'canvas').attr('transform', 'translate(600,20)');
+
+				var canvas = d3.select('#visualization2');
+
+				var names = ['Mary', 'Sue', 'Nathan', 'Kevin', 'Philip'];
+					 	
+				// draw node-link diagram
+				var r = 100;
+				var mid_x = 350;
+				var mid_y = 200-40+340*0;
+				var dim = 5; 
+				var phi = Math.PI*2/dim;
+				var p_x = [];
+				var p_y = [];
+				for (var i = 0; i < dim; i++){
+					p_x[i] = mid_x + r*Math.cos(phi*i);
+					p_y[i] = mid_y + r*Math.sin(phi*i);
+					canvas.append('circle')
+						.attr('r', 2)
+						.attr('style', 'fill: black')
+						.attr('cx', p_x[i])
+						.attr('cy', p_y[i]);
+				}
+
+				var mat = data;
+				for (var i = 0; i < mat.length; i++){
+					for (var j = i+1; j < mat.length; j++){
+						if (mat[i][j] == 1){
+							canvas.append('line')
+								.attr('id', 'line' + i+'_'+j)
+								.attr('class','links')
+								.attr('x1', p_x[i]).attr('y1', p_y[i])
+								.attr('x2', p_x[j]).attr('y2', p_y[j])
+								.attr('style', function(){
+									//var ind1 = relations[sequence][0];
+									//var ind2 = relations[sequence][1];
+									//if ((i == ind1 && j == ind2) || (i == ind2 && j == ind1)){
+										//return 'stroke: ' + colors[sequence] + '; stroke-width: 4px;';
+									//} else {
+										return 'stroke: black; stroke-width: 4px;';
+									//}
+									
+								});
+						}
+					}
+				}
+				var rx = 35;
+				var ry = 35;							
+				for (var i = 0; i < dim; i++){
+					p_x[i] = mid_x + r*Math.cos(phi*i);
+					p_y[i] = mid_y + r*Math.sin(phi*i);
+					canvas.append('ellipse').attr('class', 'nodeLabel')
+						.attr('id', 'nodeLabel_'+i)
+						.attr('rx', rx)
+						.attr('ry', ry)
+						.attr('style', function(){
+							var str;
+							if (i == 1){
+								return 'stroke: blue; stroke-width: 2;fill: white';
+							} else if (i == 4){
+								return 'stroke: orange; stroke-width: 2;fill: white';
+							}
+							else {
+								return 'stroke: black; stroke-width: 2;fill: white';
+							}
+						})
+						.attr('cx', p_x[i])
+						.attr('cy', p_y[i]);
+				}
+				for (var i = 0; i < dim; i++){
+					p_x[i] = mid_x + r*Math.cos(phi*i);
+					p_y[i] = mid_y + r*Math.sin(phi*i);
+					canvas.append('text').attr('class', 'nodeLabel')
+						.attr('id', 'nodeLabel' + i)
+						//.attr('r', 2)
+						.attr('style', function(){
+							if (i == 1){
+								return 'fill: blue; font-weight: 900; font-size: 14; text-anchor: middle';
+							} else if (i == 4){
+								return 'fill: orange; font-weight: 900; font-size: 14; text-anchor: middle';
+							} else {
+								return 'fill: black; font-size: 14; text-anchor: middle';
+							}
+							
+						})
+						.attr('x', p_x[i])
+						.attr('y', p_y[i]+12/2)
+						.text(names[i]);
+				}
+
+
+				for (var i = 0; i < names1.length; i++){
+					for (var j = 0; j < names1.length; j++){
+						svg.append('rect').attr('class', 'cell')
+							.attr('id', 'cell(' + i + ',' + j +')')
+							.attr('width', w_cell).attr('height', h_cell)
+							.attr('x', w_cell*(i+1))
+							.attr('y', h_cell*(j+1))
+							.attr('style', function(){
+								var str, str2;
+								if (data[i][j] == '1'){
+									str = 'gray';
+									str2 = 'black';
+								}
+								else {
+									str = 'white';
+									str2 = 'black';
+								} 
+									
+								return 'stroke: ' + str2 + '; stroke-width: 2; opacity: 1; fill:' + str;
+							});
+						svg.append('text').attr('class', 'noselect')
+							.attr('style', function(){
+								if (i == 1){
+									return 'font-weight:900;fill:blue';
+								} else if (i==4){
+									return 'font-weight:900;fill:orange';
+									
+								} else {
+									return 'fill:black';
+								}
+							})
+							//.attr('id', 'columnLabelText' + i)
+						//.attr('x', w_cell*(i+1)+w_cell*1/10).attr('y', h_cell*(9)/10)
+							.attr('transform', function(){
+							var x = 1*w_cell*(i+1)+w_cell*5/10;
+							var y = h_cell*9/10;
+							return 'translate(' + x + ',' + y + ')rotate(-45)';
+						}).text(function(){return names_1[i];});		
+
+						svg.append('text').attr('class', 'noselect')
+							.attr('style', function(){
+								if (i == 1){
+									return 'font-weight:900;fill:blue';
+								} else if (i==4){
+									return 'font-weight:900;fill:orange';
+									
+								} else {
+									return 'fill:black';
+								}
+							})						
+							//.attr('id', 'rowLabelText' + i)
+						//.attr('x', w_cell*(i+1)+w_cell*1/10).attr('y', h_cell*(9)/10)
+							.attr('transform', function(){
+								var x = w_cell*0/10-20;
+								var y = 1*h_cell*(i+1) + 1/2*h_cell;
+								return 'translate(' + x + ',' + y + ')';
+							})
+							.text(function(){return names_2[i];});								
+											
+						}
+					}
+					var thick = 4;
+					var thick2 = 4-1;
+					// high-lighting cells
+					for (var i = 0; i < names1.length; i++){
+
+						// blue
+						if (i == 4){
+
+						} else {
+						svg.append('rect').attr('class', 'dashed-blue')
+							.attr('x', w_cell + i*w_cell+thick2).attr('y',  2 * h_cell+thick2)
+							.attr('width', w_cell-thick2*2).attr('height', h_cell-thick2*2)
+							.attr('style', 'stroke: blue; stroke-width: ' + thick + ';  fill:none');
+						svg.append('rect').attr('class', 'dashed-blue')
+							.attr('y', w_cell + i*w_cell+thick2).attr('x',  2 * w_cell+thick2)
+							.attr('width', w_cell-thick2*2).attr('height', h_cell-thick2*2)
+							.attr('style', 'stroke: blue; stroke-width:' + thick +';  fill:none');							
+						}
+							
+					}
+					for (var i = 0; i < names1.length; i++){
+						// orange
+						//if (i != 1){
+						svg.append('rect').attr('class', 'dashed-orange')
+							.attr('x', w_cell + i*w_cell + thick2).attr('y', names1.length * h_cell+ thick2)
+							.attr('width', w_cell -2*thick2).attr('height', h_cell -2*thick2)
+							.attr('style', 'stroke: orange; stroke-width: ' + thick + ';  fill:none');
+						svg.append('rect').attr('class', 'dashed-orange')
+							.attr('y', w_cell + i*w_cell+ thick2).attr('x',  names1.length * h_cell+ thick2)
+							.attr('width', w_cell -2*thick2).attr('height', h_cell -2*thick2)
+							.attr('style', 'stroke: orange; stroke-width: ' + thick + '; fill:none');
+						//} else {
+
+					}					
+						svg.append('rect').attr('class', 'dashed-blue')
+							.attr('x', w_cell + 4*w_cell+ thick2).attr('y',  2 * h_cell+ thick2)
+							.attr('width', w_cell - 2*thick2 ).attr('height', h_cell- 2*thick2)
+							.attr('style', 'stroke: blue; stroke-width: ' + thick + '; stroke-dasharray: 5 3; fill:none');
+						svg.append('rect').attr('class', 'dashed-blue')
+							.attr('y', w_cell + 4*w_cell+ thick2).attr('x', 2 * w_cell+ thick2)
+							.attr('width', w_cell - 2*thick2).attr('height', h_cell - 2*thick2)
+							.attr('style', 'stroke: blue; stroke-width:' + thick +'; stroke-dasharray: 5 3; fill:none');					
+			</script>
+			<p class="Title3" style="text-align:center">Fig 2. The node-link diagram (left) and the matrix visualization (right)
+				of the same network with two members, Sue and Philip, highlighted in blue and orange, respectively.</p>
+													
+			<p class="Title3">Pay special attention to two cells in the matrix visualization: one that belongs to both Sue's 
+				row and Philip's column and	the other that belongs to both Philip's row and Sue's column. These two cells 
+				highlighted in both blue and orange dahshed-strokes show the relationship between Sue and Philip. Since these
+				cells are marked dark, one can understand that these two members are friends.</p>			
+						
+					<!--img src="static/data/node_link.png" alt="" width="40%" height = "40%" align = "middle" style="display:block; margin-left: auto; margin-right: auto"-->					
+			</ol>
+			<!--p id = 'logMsg'>Please read the information below before proceed.</p-->
+			<!--button id = "submit" class = 'nav_backward' type = "submit" >Previous</button-->	
+			<button id = "submit" class = 'nav_forward' type = "submit" >Next</button>		
+			<br>
+			
+			
+			<br>
+			<br>
+			<input id = 'clickdata' name='clickdata' value='0' style='display:none'>
+			<input id = 'totaltime' name='totaltime' value='0' style='display:none'>		
+			<br>
+			<!--script src="{{ url_for('static', filename='js/task1_ajax_q.js') }}"></script-->		
+			
+		<!--p id = "statement">Problem Statement</p-->
+		
+		
+		<!--script src="{{ url_for('static', filename='js/task1.js') }}"></script-->
+		
+	</div>
+	<!--div id = "msglog" onmousedown="mouseDown()" >
+		
+		
+	</div-->
+	</form>
+
+  
+  
+</div>
+
+
+
+
+<footer> Teach Information Visualization Yourself (TIVY) 2017
+</footer>
+
+</div>
+<SCRIPT type="text/javascript">
+	//window.history.forward();
+	//function noBack() { window.history.forward(); }
+</SCRIPT>
+</body>
+</html>

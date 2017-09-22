@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+<header>
+   <h2>Matrix Visualization Tutorials</h2>
+</header>
+  
+<!--article>
+  <h1>London</h1>
+  <p>London is the capital city of England. It is the most populous city in the  United Kingdom, with a metropolitan area of over 13 million inhabitants.</p>
+  <p>Standing on the River Thames, London has been a major settlement for two millennia, its history going back to its founding by the Romans, who named it Londinium.</p>
+</article-->
+
+<div id = "viewpanel" >
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<form action="{{ url_for('progress2') }}" method = "post">
+		
+	
+	<div id = "viz1" class='vizContainer' >
+		<!--h1 id = "problem">Step: ({{ session['current'] + 1}} out of 5)</h1-->
+		
+			<p class = "Title1">Visualizing a Network</p>
+			<svg width="1200" height="350" id = "visualization"></svg>
+			<script>
+				var w_cell = 45;
+				var h_cell = 45;
+				var names2 = ['Row 1', 'Row 2', 'Row 3', 'Row 4', 'Row 5'];
+				var names1 = ['Column 1', 'Column 2', 'Column 3', 'Column 4', 'Column 5'];
+
+				var names_2 = ['Mary', 'Sue', 'Nathan', 'Kevin', 'Philip'];
+				var names_1 = ['Mary', 'Sue', 'Nathan', 'Kevin', 'Philip'];
+				
+				var data = [[0, 0, 1, 1, 0], 
+							[0, 0, 1, 0, 1], 
+							[1, 1, 0, 0, 0], 
+							[1, 0, 0, 0, 1], 
+							[0, 1, 0, 1, 0]]; 
+				
+				var svg = d3.select('#visualization')
+						.append('g').attr('class', 'canvas').attr('transform', 'translate(600,20)');
+
+				var canvas = d3.select('#visualization');
+
+				var names = ['Mary', 'Sue', 'Nathan', 'Kevin', 'Philip'];
+					 	
+				// draw node-link diagram
+				var r = 100;
+				var mid_x = 350;
+				var mid_y = 200-40;
+				var dim = 5; 
+				var phi = Math.PI*2/dim;
+				var p_x = [];
+				var p_y = [];
+				for (var i = 0; i < dim; i++){
+					p_x[i] = mid_x + r*Math.cos(phi*i);
+					p_y[i] = mid_y + r*Math.sin(phi*i);
+					canvas.append('circle')
+						.attr('r', 2)
+						.attr('style', 'fill: black')
+						.attr('cx', p_x[i])
+						.attr('cy', p_y[i]);
+				}
+				var mat = [[0,0,1,1,0], 
+							[0,0,1,0,1], 
+							[1,1,0,0,0], 
+							[1,0,0,0,1], 
+							[0,1,0,1,0]];
+				for (var i = 0; i < mat.length; i++){
+					for (var j = i+1; j < mat.length; j++){
+						if (mat[i][j] == 1){
+							canvas.append('line')
+								.attr('id', 'line' + i+'_'+j)
+								.attr('class','links')
+								.attr('x1', p_x[i]).attr('y1', p_y[i])
+								.attr('x2', p_x[j]).attr('y2', p_y[j])
+								.attr('style', function(){
+									//var ind1 = relations[sequence][0];
+									//var ind2 = relations[sequence][1];
+									//if ((i == ind1 && j == ind2) || (i == ind2 && j == ind1)){
+										//return 'stroke: ' + colors[sequence] + '; stroke-width: 4px;';
+									//} else {
+										return 'stroke: black; stroke-width: 4px;';
+									//}
+									
+								});
+						}
+					}
+				}
+				var rx = 35;
+				var ry = 35;							
+				for (var i = 0; i < dim; i++){
+					p_x[i] = mid_x + r*Math.cos(phi*i);
+					p_y[i] = mid_y + r*Math.sin(phi*i);
+					canvas.append('ellipse').attr('class', 'nodeLabel')
+						.attr('id', 'nodeLabel_'+i)
+						.attr('rx', rx)
+						.attr('ry', ry)
+						.attr('style', function(){
+							var str;
+							if (i == 1){
+								return 'stroke: black; stroke-width: 2;fill: white';
+							}
+							else {
+								return 'stroke: black; stroke-width: 2;fill: white';
+							}
+						})
+						.attr('cx', p_x[i])
+						.attr('cy', p_y[i]);
+				}
+				for (var i = 0; i < dim; i++){
+					p_x[i] = mid_x + r*Math.cos(phi*i);
+					p_y[i] = mid_y + r*Math.sin(phi*i);
+					canvas.append('text').attr('class', 'nodeLabel')
+						.attr('id', 'nodeLabel' + i)
+						//.attr('r', 2)
+						.attr('style', function(){
+							if (i == 1){
+								return 'fill: black; font-size: 14; text-anchor: middle';
+							} else {
+								return 'fill: black; font-size: 14; text-anchor: middle';
+							}
+							
+						})
+						.attr('x', p_x[i])
+						.attr('y', p_y[i]+12/2)
+						.text(names[i]);
+				}
+
+
+				for (var i = 0; i < names1.length; i++){
+					for (var j = 0; j < names1.length; j++){
+						svg.append('rect').attr('class', 'cell')
+							.attr('id', 'cell(' + i + ',' + j +')')
+							.attr('width', w_cell).attr('height', h_cell)
+							.attr('x', w_cell*(i+1))
+							.attr('y', h_cell*(j+1))
+							.attr('style', function(){
+								var str, str2;
+								if (data[i][j] == '1'){
+									str = 'gray';
+									str2 = 'black';
+								}
+								else {
+									str = 'white';
+									str2 = 'black';
+								} 
+									
+								return 'stroke: ' + str2 + '; stroke-width: 2; opacity: 1; fill:' + str;
+							});
+						svg.append('text').attr('class', 'noselect')
+							//.attr('id', 'columnLabelText' + i)
+						//.attr('x', w_cell*(i+1)+w_cell*1/10).attr('y', h_cell*(9)/10)
+							.attr('transform', function(){
+							var x = 1*w_cell*(i+1)+w_cell*1/10;
+							var y = h_cell*9/10;
+							return 'translate(' + x + ',' + y + ')rotate(-45)';
+						}).text(function(){return names_1[i];});		
+
+						svg.append('text').attr('class', 'noselect')
+							//.attr('id', 'rowLabelText' + i)
+						//.attr('x', w_cell*(i+1)+w_cell*1/10).attr('y', h_cell*(9)/10)
+							.attr('transform', function(){
+								var x = w_cell*0/10-20;
+								var y = 1*h_cell*(i+1) + 1/2*h_cell;
+								return 'translate(' + x + ',' + y + ')';
+							})
+							.text(function(){return names_2[i];});								
+											
+						}
+					}
+			
+					
+			</script>		
+			<ol>
+				<p class="Title3" style="text-align: center">Fig. 1. Node-link diagram (left) and matrix visualization (right) representing 
+					a network.</p>	
+			<p class = "Title3">According to the Merriam-Webster dictionary, a network is “a usually informally interconnected group 
+					or association of persons (such as friends or professional colleagues).” Take for instance groups like
+					clubs and study groups in college, group members may form collaborative relationships or informal
+					friendships with one another. One can describe such relationships in text as "Kevin is friends with Mary while
+					Sue is friends with Phillip."</p>
+					
+					<p class = "Title3">There are a number of ways to visualize people's relationships within a network. Referring
+						to the image above, on the left-side is a node-link diagram and on the right-side is a matrix visualization. 
+						In node-link diagrams, each member of the network is represented as a node (a circle with a name label).
+						When a node is connected with another node via a link (a straight line), it means the two nodes form a relationship.
+						If the node-link diagram above were to visualize friendships within the network, two persons connected by a 
+						link (e.g. "Phillip" and "Sue") are friends while those that are not connected by a link (e.g. "Kevin" and
+						"Nathan") are not friends.</p>
+					<p class = "Title3">In the matrix visualization, the relationships within the network are visualized in a chart
+						as shown above. The rows and columns are labelled as the names of the members. Each row/column shows the
+						relationships of the member with all the other members. If a cell in a row and column is marked black, 
+						this means the person representing the row and the person representing the column form a relationship.
+						If a cell is blank, there exists no relationship, vice versa. Take for instance, a cell belonging to the
+						third row, and the second column is marked black in Fig. 1. Since the third row represents Nathan, and the second column
+						represents Sue, this cell represents a relationship between Nathan and Sue. In addition, since friendship is a
+						mutual relationship, the cell belonging to the second row (Sue) and the third column (Nathan) is also marked black.</p>
+					<!--p class = "Title3">A network is said to be "dense" when there exist many relationships among members. In a</p-->
+			</ol>
+			<!--ol >
+				<li class = "Title2">According to Merriam-Webster, a network is “a usually informally interconnected group 
+					or association of persons (such as friends or professional colleagues).” A few good examples of a network include:
+					<ul>
+						<li class = "Title3">Class of 2014: individuals who graduated from college in the year 2014</li>
+						<li class = "Title3">A book club: a group of individuals who participate in the book club’s activity</li>
+						<li class = "Title3">American Physical Society: a group of researchers who contribute to physics 
+							research through conference and journal publication in North America. </li>
+					</ul>
+				</li>
+				<li class = "Title2">The participants of a certain network naturally share some common interest and goals. 
+					It is also often of great interest to analyze how individuals interact with one another within the network. 
+					Imagine a book club with five members, Mary, Sue, Nathan, Kevin, and Philip. Within this book club, 
+					these individuals form more complicated relationships. For example: 
+					<ul>
+						<li class = "Title3">Mary and Nathan are friends.</li>
+						<li class = "Title3">Sue and Philip are friends.</li>
+						<li class = "Title3">Mary and Kevin are friends.</li>
+						<li class = "Title3">Kevin and Philip are friends.</li>
+						<li class = "Title3">Nathan and Sue are friends.</li>
+					</ul>
+				</li>
+
+			</ol-->
+	
+			<button id = "submit" class = 'nav_forward' type = "submit" >Next</button>		
+			<br>
+			
+			
+			<br>
+			<br>
+			<input id = 'clickdata' name='clickdata' value='0' style='display:none'>
+			<input id = 'totaltime' name='totaltime' value='0' style='display:none'>		
+			<br>
+
+		
+	</div>
+	<!--div id = "msglog" onmousedown="mouseDown()" >
+		
+		
+	</div-->
+	</form>
+
+  
+  
+</div>
+
+
+
+
+<footer> Teach Information Visualization Yourself (TIVY) 2017
+</footer>
+
+</div>
+<SCRIPT type="text/javascript">
+	//window.history.forward();
+	//function noBack() { window.history.forward(); }
+</SCRIPT>
+</body>
+</html>
